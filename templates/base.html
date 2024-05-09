@@ -1,0 +1,82 @@
+{% load static %}
+{% load users_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+</head>
+<body class="d-flex flex-column min-vh-100">
+<header class="p-3 text-bg-dark">
+    <div class="container">
+        <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+            <div class="col-md-3 mb-2 mb-md-0">
+                <a class="navbar-brand" href="">Sender | рассылки</a>
+            </div>
+            <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+                <li><a href="" class="nav-link px-2 text-white">Главная</a></li>
+                <li><a href="" class="nav-link px-2 text-white">Блог</a></li>
+                {% if user.is_authenticated %}
+                <li><a href="" class="nav-link px-2 text-white">Мои рассылки</a></li>
+                <li><a href="" class="nav-link px-2 text-white">Мои клиенты</a></li>
+                <li><a href="" class="nav-link px-2 text-white">Логи</a></li>
+                {% endif %}
+            </ul>
+            {% if user.is_authenticated %}
+            <div class="dropdown text-end">
+                <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle"
+                   data-bs-toggle="dropdown" aria-expanded="false">
+                    {% user_avatar as avatar_url %}
+                    <img src="{{ avatar_url|my_avatar }}" alt="mdo" width="32" height="32" class="rounded-circle">
+                </a>
+                <ul class="dropdown-menu text-small">
+                    <li><a class="dropdown-item" href="">Новая рассылка</a></li>
+                    <li><a class="dropdown-item" href="">Профиль</a></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item" href="">Выход</a></li>
+                </ul>
+            </div>
+            {% else %}
+            <div class="col-md-3 text-end">
+                <a href="" class="btn btn-outline-light me-2">Вход</a>
+                <a href="" type="button" class="btn btn-warning">Регистрация</a>
+            </div>
+            {% endif %}
+        </header>
+    </div>
+</header>
+{% block content %}
+{% endblock %}
+<div class="wrapper flex-grow-1"></div>
+<div class="container">
+    <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top mx-auto">
+        <p class="col-md-4 mb-0 text-body-secondary">&copy; 2023 - {% now 'Y' %} Sender, Inc</p>
+
+        <a href="/"
+           class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+            <svg class="bi me-2" width="40" height="32">
+                <use xlink:href="#bootstrap"/>
+            </svg>
+        </a>
+
+        <ul class="nav col-md-4 justify-content-end">
+            <li class="nav-item"><a href=""
+                                    class="nav-link px-2 text-body-secondary">Главная</a></li>
+            <li class="nav-item"><a href="" class="nav-link px-2 text-body-secondary">Блог</a></li>
+            {% if user.is_authenticated %}
+            <li class="nav-item"><a href="" class="nav-link px-2 text-body-secondary">Мои
+                рассылки</a></li>
+            <li class="nav-item"><a href="" class="nav-link px-2 text-body-secondary">Мои
+                клиенты</a></li>
+            <li class="nav-item"><a href=""
+                                    class="nav-link px-2 text-body-secondary">Логи</a></li>
+            {% endif %}
+        </ul>
+    </footer>
+</div>
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>
