@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load users_tags %}
+{% block content %}
+<main class="form-signin w-100 m-auto">
+    <div class="container">
+        <div class="row row-centered">
+            <div class="col-4 mt-5 mx-auto">
+                <form method="post">
+                    {% csrf_token %}
+                    <h1 class="h3 mb-3 fw-normal text-center">Вход</h1>
+                    <div class="input-group input-group-lg mb-3">
+                        <span class="input-group-text" id="phone-number-addon1">+7</span>
+                        {{ form.phone_number|add_placeholder:'Телефон' }}
+                    </div>
+                    <br>
+                    <button class="btn btn-primary w-100 py-2" type="submit">Получить код на телефон</button>
+                </form>
+                <div class="mt-4">
+                    <p class="text-center"><a class="link-opacity-100-hover" href="{% url 'users:signin' %}">Войти с
+                        помощью пароля</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
