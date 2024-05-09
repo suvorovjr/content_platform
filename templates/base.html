@@ -15,7 +15,7 @@
                 <a class="navbar-brand" href="">Sender | рассылки</a>
             </div>
             <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-                <li><a href="" class="nav-link px-2 text-white">Главная</a></li>
+                <li><a href="{% url 'users:index' %}" class="nav-link px-2 text-white">Главная</a></li>
                 <li><a href="" class="nav-link px-2 text-white">Блог</a></li>
                 {% if user.is_authenticated %}
                 <li><a href="" class="nav-link px-2 text-white">Мои рассылки</a></li>
@@ -36,13 +36,15 @@
                     <li>
                         <hr class="dropdown-divider">
                     </li>
-                    <li><a class="dropdown-item" href="">Выход</a></li>
+                    <form method="post" action="{% url 'users:logout' %}">
+                        {% csrf_token %}
+                        <li><button type="submit" class="dropdown-item"">Выход</button></li>
+                    </form>
                 </ul>
             </div>
             {% else %}
             <div class="col-md-3 text-end">
-                <a href="" class="btn btn-outline-light me-2">Вход</a>
-                <a href="" type="button" class="btn btn-warning">Регистрация</a>
+                <a href="{% url 'users:login' %}" class="btn btn-outline-light me-2">Войти</a>
             </div>
             {% endif %}
         </header>
