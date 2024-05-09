@@ -15,6 +15,16 @@ class UserForm(StylesMixin, forms.ModelForm):
         model = User
         fields = ('phone_number',)
 
+    def is_valid(self):
+        valid = super().is_valid()
+        if 'phone_number' in self.errors:
+            unique_error = 'Пользователь с таким Номер телефона уже существует.'
+            if unique_error in self.errors['phone_number']:
+                del self.errors['phone_number']
+                self.cleaned_data['phone_number'] = self.data['phone_number']
+                return True
+        return valid
+
     def clean_phone_number(self):
         phone_number = self.cleaned_data['phone_number']
         if not phone_number.isdigit():
