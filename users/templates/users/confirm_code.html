@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load users_tags %}
+{% block content %}
+<main class="form-signin w-100 m-auto">
+    <div class="container">
+        <div class="row row-centered">
+            <div class="col-4 mt-5 mx-auto">
+                <form method="post">
+                    {% csrf_token %}
+                    <h2 class="h2 mb-3 fw-normal text-center">Введите код</h2>
+                    <h4 class="h4 mb-3 fw-normal text-center">Мы отправили его на номер:</h4>
+                    <h4 class="h4 mb-3 fw-normal text-center">+7 {{ request.session.phone_number|format_phone }}</h4>
+                    <div class="input-group input-group-lg mb-3">
+                        {{ form.confirm_code|add_placeholder:'Код подтверждения' }}
+                    </div>
+                    <button class="btn btn-primary w-100 py-2" type="submit">Войти</button>
+                    <div class="mt-4">
+                        <p class="text-center"><a class="link-opacity-100-hover"
+                                                  href="{% url 'users:confirm_code' %}?resend=true">Отправить код
+                            повторно</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
