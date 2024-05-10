@@ -43,6 +43,13 @@ class LoginForm(StylesMixin, AuthenticationForm):
 class ConfirmCodeForm(StylesMixin, forms.Form):
     confirm_code = forms.CharField(max_length=6, help_text='Введите шестизначный код из смс сообщения')
 
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        super().__init__(*args, **kwargs)
+
     def clean_confirm_code(self):
-        confirm_code = self.cleaned_data['confirm_code']
+        user_code = self.cleaned_data['confirm_code']
+        confirm_code = self.request.session['confirm_code']
+        if str(user_code) != str(confirm_code):
+            raise forms.ValidationError('Неверный код подтверждения')
         return confirm_code

@@ -1,3 +1,4 @@
+from django.contrib.auth import login
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.views.generic import TemplateView, CreateView, FormView
@@ -32,6 +33,7 @@ class UserCreateView(CreateView):
             user, created = User.objects.get_or_create(phone_number=phone_number)
             self.request.session['phone_number'] = phone_number
             self.request.session['confirm_code'] = confirm_code
+            print(confirm_code)
             if not created:
                 return HttpResponseRedirect(self.success_url)
             else:
@@ -62,19 +64,29 @@ class ConfirmCodeView(FormView):
 
     def post(self, request, *args, **kwargs):
         form = self.get_form()
+
         if form.is_valid():
-            user_code = form.cleaned_data['confirm_code']
-            confirm_code = request.session.get('confirm_code')
-            print(user_code)
-            print(confirm_code)
-        else:
+            phone_number = self.request.session['phone_number']
+            user = User.objects.filter(phone_number=phone_number).first()
+            login(self.request, user)
+            del self.request.session['confirm_code']
+            del self.request.session['phone_number']
             return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({'request': self.request})
+        return kwargs
 
     def get(self, request, *args, **kwargs):
         context_data = self.get_context_data()
         if 'resend' in request.GET:
             phone_number = request.session['phone_number']
+            print(phone_number)
             confirm_code = get_confirm_code()
+            print(confirm_code)
             self.request.session['confirm_code'] = confirm_code
             send_sms_code(phone_number, confirm_code)
         return self.render_to_response(context_data)

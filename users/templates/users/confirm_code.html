@@ -13,6 +13,11 @@
                     <div class="input-group input-group-lg mb-3">
                         {{ form.confirm_code|add_placeholder:'Код подтверждения' }}
                     </div>
+                    <br>
+                    {{ form.confirm_code.errors }}
+                    {% if form.confirm_code.errors %}
+                    <br>
+                    {% endif %}
                     <button class="btn btn-primary w-100 py-2" type="submit">Войти</button>
                     <div class="mt-4">
                         <p class="text-center"><a class="link-opacity-100-hover"
