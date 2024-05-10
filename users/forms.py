@@ -59,3 +59,9 @@ class FlagAutorForm(StylesMixin, forms.ModelForm):
     class Meta:
         model = User
         fields = ('author_username', 'subscription_price')
+
+    def clean_author_username(self):
+        author_username = str(self.cleaned_data['author_username'])
+        if len(author_username) < 3:
+            raise forms.ValidationError('Название блога не может быть меньше 3 символов')
+        return author_username
