@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load users_tags %}
+{% block content %}
+<div class="row">
+    <div style="text-align:center; margin-top:20px" class="col-lg-6 mx-auto">
+        <img style="width:300px; height:300px; margin:auto;" class="bd-placeholder-img rounded-circle border"
+             src="{{ object.avatar|my_avatar }}">
+        {% if object.first_name and object.last_name %}
+        <h2 class="fw-normal">{{ object.first_name }} {{ object.last_name }}</h2>
+        {% else %}
+        <h2 class="fw-normal">{{ object.email }}</h2>
+        {% endif %}
+        <a style="margin-top: 10px;" class="btn btn-secondary" href="">Редактировать
+            профиль</a>
+    </div>
+    {% if user.is_author %}
+    <h2 class="display-5 text-center p-3">Вы не выложили контент.</h2>
+    {% endif %}
+</div>
+{% endblock %}

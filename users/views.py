@@ -1,7 +1,7 @@
 from django.contrib.auth import login
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
-from django.views.generic import TemplateView, CreateView, FormView, ListView, UpdateView
+from django.views.generic import TemplateView, CreateView, FormView, ListView, DetailView
 from django.contrib.auth.views import LoginView as BaseLoginView
 from .forms import UserForm, LoginForm, ConfirmCodeForm, FlagAutorForm
 from .services import get_confirm_code, send_sms_code
@@ -64,7 +64,6 @@ class ConfirmCodeView(FormView):
 
     def post(self, request, *args, **kwargs):
         form = self.get_form()
-
         if form.is_valid():
             phone_number = self.request.session['phone_number']
             user = User.objects.filter(phone_number=phone_number).first()
@@ -114,6 +113,11 @@ class FlagAuthorView(FormView):
         else:
             return self.form_invalid(form)
 
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data['title'] = 'Стать автором'
+        return context_data
+
 
 class UserListView(ListView):
     model = User
@@ -124,3 +128,16 @@ class UserListView(ListView):
         context_data['object_list'] = User.objects.filter(is_author=True)
         context_data['title'] = 'Блогеры'
         return context_data
+
+
+class ProfileView(DetailView):
+    model = User
+    template_name = 'users/profile.html'
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data['title'] = 'Профиль'
+        return context_data
+
+    def get_object(self, queryset=None):
+        return self.request.user
