@@ -11,4 +11,5 @@ urlpatterns = [
     path('signin/', LoginView.as_view(), name='signin'),
     path('confirm_code/', ConfirmCodeView.as_view(), name='confirm_code'),
     path('logout/', LogoutView.as_view(), name='logout'),
+    path('blogger/list/', LogoutView.as_view(), name='list'),
 ]

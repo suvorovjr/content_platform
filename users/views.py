@@ -1,7 +1,7 @@
 from django.contrib.auth import login
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
-from django.views.generic import TemplateView, CreateView, FormView
+from django.views.generic import TemplateView, CreateView, FormView, ListView
 from django.contrib.auth.views import LoginView as BaseLoginView
 from .forms import UserForm, LoginForm, ConfirmCodeForm
 from .services import get_confirm_code, send_sms_code
@@ -94,4 +94,15 @@ class ConfirmCodeView(FormView):
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         context_data['title'] = 'Подтверждение номера'
+        return context_data
+
+
+class UserListView(ListView):
+    model = User
+    template_name = 'users/authors_list.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data['object_list'] = User.objects.filter(is_author=True)
+        context_data['title'] = 'Блогеры'
         return context_data
