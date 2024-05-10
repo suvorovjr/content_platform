@@ -53,3 +53,9 @@ class ConfirmCodeForm(StylesMixin, forms.Form):
         if str(user_code) != str(confirm_code):
             raise forms.ValidationError('Неверный код подтверждения')
         return confirm_code
+
+
+class FlagAutorForm(StylesMixin, forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('author_username', 'subscription_price')

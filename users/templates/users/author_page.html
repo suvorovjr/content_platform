@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load users_tags %}
+{% block content %}
+<main class="form-signin w-100 m-auto">
+    <div class="container">
+        <div class="row row-centered">
+            <div class="col-4 mt-5 mx-auto">
+                <form method="post">
+                    {% csrf_token %}
+                    <h2 class="h2 mb-3 fw-normal text-center">Стать автором</h2>
+                    <div class="input-group input-group-lg mb-3">
+                        {{ form.author_username|add_placeholder:'Название блога' }}
+                    </div>
+                    <div class="input-group input-group-lg mb-3">
+                        {{ form.subscription_price|add_placeholder:'Стоимость подписки/мес' }}
+                    </div>
+                    <br>
+                    {{ form.author_username.errors }}
+                    {{ form.subscription_price.errors }}
+                    {% if form.errors %}
+                    <br>
+                    {% endif %}
+                    <button class="btn btn-primary w-100 py-2" type="submit">Войти</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

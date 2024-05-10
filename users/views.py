@@ -1,9 +1,9 @@
 from django.contrib.auth import login
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
-from django.views.generic import TemplateView, CreateView, FormView, ListView
+from django.views.generic import TemplateView, CreateView, FormView, ListView, UpdateView
 from django.contrib.auth.views import LoginView as BaseLoginView
-from .forms import UserForm, LoginForm, ConfirmCodeForm
+from .forms import UserForm, LoginForm, ConfirmCodeForm, FlagAutorForm
 from .services import get_confirm_code, send_sms_code
 from .models import User
 
@@ -95,6 +95,24 @@ class ConfirmCodeView(FormView):
         context_data = super().get_context_data(**kwargs)
         context_data['title'] = 'Подтверждение номера'
         return context_data
+
+
+class FlagAuthorView(FormView):
+    form_class = FlagAutorForm
+    template_name = 'users/author_page.html'
+    success_url = reverse_lazy('users:index')
+
+    def post(self, request, *args, **kwargs):
+        user = self.request.user
+        form = self.get_form()
+        if form.is_valid():
+            user.author_username = form.cleaned_data['author_username']
+            user.subscription_price = form.cleaned_data['subscription_price']
+            user.is_author = True
+            user.save()
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
 
 
 class UserListView(ListView):

@@ -12,7 +12,7 @@
     <div class="container">
         <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
             <div class="col-md-3 mb-2 mb-md-0">
-                <a class="navbar-brand" href="">Sender | рассылки</a>
+                <a class="navbar-brand" href="{% url 'users:index' %}">Content | контент</a>
             </div>
             <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
                 <li><a href="{% url 'users:index' %}" class="nav-link px-2 text-white">Главная</a></li>
@@ -24,9 +24,20 @@
                 {% endif %}
             </ul>
             {% if user.is_authenticated %}
-            <div class="d-flex justify-content-end">
-                <a href="{% url 'users:login' %}" class="btn btn-outline-light me-2 pull-right">Войти</a>
+            {% if not user.is_author %}
+            <a href="{% url 'users:flag-autor' %}" class="btn btn-warning">Стать автором</a>
+            {% else %}
+            <div class="dropdown text-end">
+                <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle"
+                   data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="/static/imagine/plus.svg" alt="mdo" width="32" height="32" class="rounded-circle">
+                </a>
+                <ul class="dropdown-menu text-small">
+                    <li><a class="dropdown-item" href="">Новый пост</a></li>
+                    <li><a class="dropdown-item" href="">Новое видео</a></li>
+                </ul>
             </div>
+            {% endif %}
             <div class="dropdown text-end">
                 <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle"
                    data-bs-toggle="dropdown" aria-expanded="false">
@@ -60,7 +71,7 @@
 <div class="wrapper flex-grow-1"></div>
 <div class="container">
     <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top mx-auto">
-        <p class="col-md-4 mb-0 text-body-secondary">&copy; 2023 - {% now 'Y' %} Sender, Inc</p>
+        <p class="col-md-4 mb-0 text-body-secondary">&copy; 2023 - {% now 'Y' %} Content, Inc</p>
 
         <a href="/"
            class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
