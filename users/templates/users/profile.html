@@ -10,7 +10,7 @@
         {% else %}
         <h2 class="fw-normal">{{ object.email }}</h2>
         {% endif %}
-        <a style="margin-top: 10px;" class="btn btn-secondary" href="">Редактировать
+        <a style="margin-top: 10px;" class="btn btn-secondary" href="{% url 'users:profile_update' %}">Редактировать
             профиль</a>
     </div>
     {% if user.is_author %}

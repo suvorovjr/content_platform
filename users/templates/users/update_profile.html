@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load users_tags %}
+{% load static %}
+{% block content %}
+<main class="form-signin w-100 m-auto">
+    <div class="container">
+        <div class="row row-centered">
+            <div class="col-6 mt-5 mx-auto">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <h1 class="h3 mb-3 fw-normal text-center">Редактирование профиля</h1>
+                    <div class="form-floating">
+                        {{ form.email }}
+                        <label>Email</label>
+                    </div>
+                    <div class="form-floating">
+                        {{ form.first_name }}
+                        <label>Имя</label>
+                    </div>
+                    <div class="form-floating">
+                        {{ form.last_name }}
+                        <label>Фамилия</label>
+                    </div>
+                    {{ form.avatar }}
+                    {% for name, error in form.errors.items %}
+                    <br>
+                    <div class="signup-link">{{ error }}</div>
+                    {% if loop.last %}
+                    <br>
+                    {% endif %}
+                    {% endfor %}
+                    {% if form.non_field_errors %}
+                    <small>{{ form.non_field_errors }}</small>
+                    {% else %}
+                    <div class="form-check text-start my-3">
+                        <label class="form-check-label">
+                        </label>
+                    </div>
+                    {% endif %}
+                    <button class="btn btn-primary w-100 py-2" type="submit">Сохранить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

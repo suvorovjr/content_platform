@@ -1,4 +1,4 @@
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm
 from users.models import User
 from django import forms
 
@@ -65,3 +65,13 @@ class FlagAutorForm(StylesMixin, forms.ModelForm):
         if len(author_username) < 3:
             raise forms.ValidationError('Название блога не может быть меньше 3 символов')
         return author_username
+
+
+class ProfileUpdateForm(StylesMixin, UserChangeForm):
+    class Meta:
+        model = User
+        fields = ('email', 'password', 'first_name', 'last_name', 'avatar')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['password'].widget = forms.HiddenInput()

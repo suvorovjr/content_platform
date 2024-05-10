@@ -1,9 +1,9 @@
 from django.contrib.auth import login
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
-from django.views.generic import TemplateView, CreateView, FormView, ListView, DetailView
+from django.views.generic import TemplateView, CreateView, FormView, ListView, DetailView, UpdateView
 from django.contrib.auth.views import LoginView as BaseLoginView
-from .forms import UserForm, LoginForm, ConfirmCodeForm, FlagAutorForm
+from .forms import UserForm, LoginForm, ConfirmCodeForm, FlagAutorForm, ProfileUpdateForm
 from .services import get_confirm_code, send_sms_code
 from .models import User
 
@@ -137,6 +137,21 @@ class ProfileView(DetailView):
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         context_data['title'] = 'Профиль'
+        return context_data
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+
+class ProfileUpdateView(UpdateView):
+    model = User
+    form_class = ProfileUpdateForm
+    template_name = 'users/update_profile.html'
+    success_url = reverse_lazy('users:profile')
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data['title'] = 'Редактирование профиля'
         return context_data
 
     def get_object(self, queryset=None):
