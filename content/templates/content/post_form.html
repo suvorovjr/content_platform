@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load users_tags %}
+{% block content %}
+<main class="form-signin w-100 m-auto">
+    <div class="container">
+        <div class="row row-centered">
+            <div class="col-4 mt-5 mx-auto">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <h2 class="h2 mb-3 fw-normal text-center">Создание статьи</h2>
+                    <div class="input-group input-group-lg mb-3">
+                        {{ form.title|add_placeholder:'Заголовок' }}
+                    </div>
+                    <div class="input-group input-group-lg mb-3">
+                        {{ form.body|add_placeholder:'Текст статьи' }}
+                    </div>
+                    <div class="input-group input-group-lg mb-3">
+                        {{ form.imagine }}
+                    </div>
+                    <div class="form-check">
+                        <input name="{{ form.is_paid_content.name }}" class="form-check-input" type="checkbox" value="'>
+                        <label class=" form-check-label" for="flexCheckDefault">
+                        Флажок по умолчанию
+                        </label>
+                    </div>
+                    {{ form.errors }}
+                    <br>
+                    <button class="btn btn-primary w-100 py-2" type="submit">Создать</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

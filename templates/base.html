@@ -33,7 +33,7 @@
                     <img src="/static/imagine/plus.svg" alt="mdo" width="32" height="32" class="rounded-circle">
                 </a>
                 <ul class="dropdown-menu text-small">
-                    <li><a class="dropdown-item" href="">Новый пост</a></li>
+                    <li><a class="dropdown-item" href="{% url 'content:blog-create' %}">Новый пост</a></li>
                     <li><a class="dropdown-item" href="">Новое видео</a></li>
                 </ul>
             </div>
@@ -54,7 +54,7 @@
                         {% csrf_token %}
                         <li>
                             <button type="submit" class="dropdown-item"
-                            ">Выход</button></li>
+                            >Выход</button></li>
                     </form>
                 </ul>
             </div>
