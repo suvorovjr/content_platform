@@ -16,3 +16,11 @@ class User(AbstractUser):
                                                           validators=[MaxValueValidator(9999)], **NULLABLE)
     USERNAME_FIELD = 'phone_number'
     REQUIRED_FIELDS = []
+
+
+class Subscription(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, **NULLABLE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='subscription_to')
+    paid_content = models.BooleanField(default=False)
+    start_date = models.DateField()
+    end_date = models.DateField()
