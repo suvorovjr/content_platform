@@ -1,9 +1,9 @@
 from django.db import models
-
-NULLABLE = {'null': True, 'blank': True}
+from users.models import User, NULLABLE
 
 
 class Post(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE, **NULLABLE)
     title = models.CharField(max_length=155, verbose_name='Заголовок')
     body = models.TextField(verbose_name='Информациионный блок')
     imagine = models.ImageField(upload_to='post_images/', verbose_name='Облложка', **NULLABLE)
