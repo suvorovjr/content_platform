@@ -1,9 +1,9 @@
 from django.urls import reverse_lazy
-from django.views.generic import CreateView
+from django.views import generic
 from .forms import PostForm
 
 
-class PostCreateView(CreateView):
+class PostCreateView(generic.CreateView):
     form_class = PostForm
     success_url = reverse_lazy('users:index')
     template_name = 'content/post_form.html'
@@ -19,3 +19,19 @@ class PostCreateView(CreateView):
             post.author = self.request.user
             post.author.save()
         return super().form_valid(form)
+
+
+class PostUpdateView(generic.UpdateView):
+    pass
+
+
+class FeedListView(generic.ListView):
+    pass
+
+
+class PostDetailView(generic.DetailView):
+    pass
+
+
+class PostDeleteView(generic.DeleteView):
+    pass
