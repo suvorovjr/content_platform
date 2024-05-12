@@ -4,10 +4,10 @@
 <main class="form-signin w-100 m-auto">
     <div class="container">
         <div class="row row-centered">
-            <div class="col-4 mt-5 mx-auto">
+            <div class="col-8 mt-5 mx-auto">
                 <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <h2 class="h2 mb-3 fw-normal text-center">Создание статьи</h2>
+                    <h2 class="h2 mb-3 fw-normal text-center">{{ title }}</h2>
                     <div class="input-group input-group-lg mb-3">
                         {{ form.title|add_placeholder:'Заголовок' }}
                     </div>
@@ -16,6 +16,7 @@
                     </div>
                     <div class="input-group input-group-lg mb-3">
                         {{ form.imagine }}
+                        <label class="input-group-text">Загрузите обложку</label>
                     </div>
                     <div class="form-check">
                         <input name="{{ form.is_paid_content.name }}" class="form-check-input" type="checkbox" value="'>

@@ -15,4 +15,4 @@ class PostForm(StylesMixin, BaseForm):
 
 class VideoForm(StylesMixin, BaseForm):
     class Meta(BaseForm.Meta):
-        model = Post
+        model = Video

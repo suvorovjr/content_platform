@@ -33,8 +33,8 @@
                     <img src="/static/imagine/plus.svg" alt="mdo" width="32" height="32" class="rounded-circle">
                 </a>
                 <ul class="dropdown-menu text-small">
-                    <li><a class="dropdown-item" href="{% url 'content:blog-create' %}">Новый пост</a></li>
-                    <li><a class="dropdown-item" href="">Новое видео</a></li>
+                    <li><a class="dropdown-item" href="{% url 'content:post-create' %}">Новый пост</a></li>
+                    <li><a class="dropdown-item" href="{% url 'content:video-create' %}">Новое видео</a></li>
                 </ul>
             </div>
             {% endif %}

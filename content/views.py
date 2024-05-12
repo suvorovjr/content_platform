@@ -3,7 +3,17 @@ from django.views import generic
 from .forms import PostForm, VideoForm
 
 
-class BaseCreateView(generic.CreateView):
+class TitleMixin:
+    title = None
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        if self.title is not None:
+            context_data['title'] = self.title
+        return context_data
+
+
+class BaseCreateView(TitleMixin, generic.CreateView):
     success_url = reverse_lazy('users:index')
 
     def form_valid(self, form):
@@ -14,24 +24,16 @@ class BaseCreateView(generic.CreateView):
         return super().form_valid(form)
 
 
-class VideoCreateView(BaseCreateView):
-    form_class = VideoForm
-    template_name = 'content/video_form.html'
-
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        context_data['title'] = 'Создание видео'
-        return context_data
-
-
 class PostCreateView(BaseCreateView):
     form_class = PostForm
     template_name = 'content/post_form.html'
+    title = 'Создание поста'
 
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        context_data['title'] = 'Создание поста'
-        return context_data
+
+class VideoCreateView(BaseCreateView):
+    form_class = VideoForm
+    template_name = 'content/video_form.html'
+    title = 'Создание видео'
 
 
 class PostUpdateView(generic.UpdateView):
