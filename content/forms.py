@@ -1,12 +1,18 @@
 from django import forms
-from .models import Post
+from .models import Post, Video
 from users.forms import StylesMixin
 
 
-class PostForm(StylesMixin, forms.ModelForm):
+class BaseForm(forms.ModelForm):
     class Meta:
+        exclude = ('author', 'created_at')
+
+
+class PostForm(StylesMixin, BaseForm):
+    class Meta(BaseForm.Meta):
         model = Post
-        fields = '__all__'
-        widgets = {
-            'your_field': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-        }
+
+
+class VideoForm(StylesMixin, BaseForm):
+    class Meta(BaseForm.Meta):
+        model = Post
