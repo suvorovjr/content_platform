@@ -1,4 +1,4 @@
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm
+from django.contrib.auth.forms import AuthenticationForm, UserChangeForm
 from users.models import User
 from django import forms
 
@@ -58,13 +58,18 @@ class ConfirmCodeForm(StylesMixin, forms.Form):
 class FlagAutorForm(StylesMixin, forms.ModelForm):
     class Meta:
         model = User
-        fields = ('author_username', 'subscription_price')
+        fields = ('blog_username', 'blog_description', 'subscription_price')
 
-    def clean_author_username(self):
-        author_username = str(self.cleaned_data['author_username'])
-        if len(author_username) < 3:
+    def clean_blog_username(self):
+        blog_username = str(self.cleaned_data['blog_username'])
+        if len(blog_username) < 3:
             raise forms.ValidationError('Название блога не может быть меньше 3 символов')
-        return author_username
+        return blog_username
+    def clean_blog_description(self):
+        blog_description = str(self.cleaned_data['blog_description'])
+        if len(blog_description) < 20:
+            raise forms.ValidationError('Описание блога не может быть меньше 20 символов')
+        return blog_description
 
 
 class ProfileUpdateForm(StylesMixin, UserChangeForm):

@@ -11,7 +11,8 @@ class User(AbstractUser):
     email = models.EmailField(verbose_name='Email', **NULLABLE)
     avatar = models.ImageField(upload_to='avatars/', verbose_name='Аватар', **NULLABLE)
     is_author = models.BooleanField(default=False, verbose_name='Автор')
-    author_username = models.CharField(max_length=25, verbose_name='Никнейм автора', **NULLABLE)
+    blog_username = models.CharField(max_length=25, verbose_name='Название блога', **NULLABLE)
+    blog_description = models.TextField(verbose_name='Описание блога', **NULLABLE)
     subscription_price = models.PositiveSmallIntegerField(verbose_name='Стоимость подписки',
                                                           validators=[MaxValueValidator(9999)], **NULLABLE)
     USERNAME_FIELD = 'phone_number'

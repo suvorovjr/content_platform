@@ -31,13 +31,11 @@
             <div class="card mb-4">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-3"><img src="../static/pict 1.png" class="img-fluid" alt=""></div>
+                        <div class="col-3"><img src="/media/{{ object.avatar }}" class="img-fluid" alt=""></div>
                         <div class="col-9">
-                            <p class="float-right">Рейтинг: 4.8 Ставка: 1200 / час</p>
-                            <h2 class="h4">Morris Simmmons</h2>
-                            <p>Репетитор американского английского языка. Структурированная система обучения. Всем
-                                привет! Я предпочитаю называть себя «тренером» английского языка. Мои занятия похожи на
-                                тренировки</p>
+                            <p class="float-right">Стоимость подписки: {{ object.subscription_price }} / мес</p>
+                            <h2 class="h4">{{ object.blog_username }}</h2>
+                            <p>{{ object.blog_description }}</p>
                             <a href="profile.html" class="btn btn-outline-primary btn-sm mr-3 mb-2">Показать информаци и
                                 расписание</a>
                         </div>

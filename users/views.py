@@ -30,14 +30,11 @@ class UserCreateView(CreateView):
             phone_number = form.cleaned_data['phone_number']
             confirm_code = get_confirm_code()
             send_sms_code(phone_number=phone_number, confirm_code=confirm_code)
-            user, created = User.objects.get_or_create(phone_number=phone_number)
+            User.objects.get_or_create(phone_number=phone_number)
             self.request.session['phone_number'] = phone_number
             self.request.session['confirm_code'] = confirm_code
             print(confirm_code)
-            if not created:
-                return HttpResponseRedirect(self.success_url)
-            else:
-                return self.form_valid(form)
+            return HttpResponseRedirect(self.success_url)
         else:
             return self.form_invalid(form)
 
@@ -105,7 +102,8 @@ class FlagAuthorView(FormView):
         user = self.request.user
         form = self.get_form()
         if form.is_valid():
-            user.author_username = form.cleaned_data['author_username']
+            user.blog_username = form.cleaned_data['blog_username']
+            user.blog_description = form.cleaned_data['blog_description']
             user.subscription_price = form.cleaned_data['subscription_price']
             user.is_author = True
             user.save()
