@@ -2,7 +2,7 @@ from django.contrib.auth.views import LogoutView
 from django.urls import path
 from users.apps import UsersConfig
 from .views import IndexView, UserCreateView, LoginView, ConfirmCodeView, UserListView, FlagAuthorView, ProfileView, \
-    ProfileUpdateView
+    ProfileUpdateView, AuthorProfileView
 
 app_name = UsersConfig.name
 
@@ -16,4 +16,5 @@ urlpatterns = [
     path('profile/', ProfileView.as_view(), name='profile'),
     path('profile/update/', ProfileUpdateView.as_view(), name='profile_update'),
     path('blogger/list/', UserListView.as_view(), name='list'),
+    path('author-profile/<int:pk>', AuthorProfileView.as_view(), name='author_profile'),
 ]

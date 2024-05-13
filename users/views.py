@@ -5,6 +5,7 @@ from django.views.generic import TemplateView, CreateView, FormView, ListView, D
 from django.contrib.auth.views import LoginView as BaseLoginView
 from .forms import UserForm, LoginForm, ConfirmCodeForm, FlagAutorForm, ProfileUpdateForm
 from .services import get_confirm_code, send_sms_code
+from content.models import Post, Video
 from .models import User
 
 
@@ -154,3 +155,18 @@ class ProfileUpdateView(UpdateView):
 
     def get_object(self, queryset=None):
         return self.request.user
+
+
+class AuthorProfileView(DetailView):
+    model = User
+    template_name = 'users/author_profile.html'
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        author = self.get_object()
+        posts = Post.objects.filter(author=author).values()
+        videos = Video.objects.filter(author=author).values()
+        combined_data = sorted(list(posts) + list(videos), key=lambda x: x['created_at'], reverse=True)
+        context_data['object_list'] = combined_data
+        context_data['title'] = f'Профиль {author.blog_username}'
+        return context_data
