@@ -1,8 +1,10 @@
+import uuid
 from django.db import models
 from users.models import User, NULLABLE
 
 
 class AbstractPublication(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     author = models.ForeignKey(User, on_delete=models.CASCADE, **NULLABLE)
     title = models.CharField(max_length=155, verbose_name='Заголовок')
     body = models.TextField(verbose_name='Информациионный блок')

@@ -1,3 +1,4 @@
+import uuid
 from django.core.validators import MaxValueValidator
 from django.db import models
 from django.contrib.auth.models import AbstractUser
@@ -7,6 +8,7 @@ NULLABLE = {'blank': True, 'null': True}
 
 class User(AbstractUser):
     username = None
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4(), editable=False)
     phone_number = models.CharField(max_length=10, unique=True, verbose_name='Номер телефона')
     email = models.EmailField(verbose_name='Email', **NULLABLE)
     avatar = models.ImageField(upload_to='avatars/', verbose_name='Аватар', **NULLABLE)
