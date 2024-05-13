@@ -27,7 +27,7 @@ class Post(AbstractPublication):
 
 
 class Video(AbstractPublication):
-    body = None
+    body = models.TextField(verbose_name='Описание видео')
 
     class Meta:
         verbose_name = 'видео'

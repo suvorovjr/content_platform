@@ -65,6 +65,7 @@ class FlagAutorForm(StylesMixin, forms.ModelForm):
         if len(blog_username) < 3:
             raise forms.ValidationError('Название блога не может быть меньше 3 символов')
         return blog_username
+
     def clean_blog_description(self):
         blog_description = str(self.cleaned_data['blog_description'])
         if len(blog_description) < 20:
