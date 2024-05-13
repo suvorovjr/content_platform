@@ -1,5 +1,7 @@
 from django.urls import reverse_lazy
+from pytils.translit import slugify
 from django.contrib.auth.mixins import UserPassesTestMixin
+from users.views import SlugifyMixin
 from django.views import generic
 from .forms import PostForm, VideoForm
 
@@ -20,13 +22,15 @@ class TitleMixin:
         return context_data
 
 
-class BaseCreateView(TitleMixin, generic.CreateView):
+class BaseCreateView(SlugifyMixin, TitleMixin, generic.CreateView):
     success_url = reverse_lazy('users:profile')
 
     def form_valid(self, form):
         if form.is_valid():
             publication = form.save()
             publication.author = self.request.user
+            publication.slug = self.get_unique_slug(self.model, publication.title)
+            publication.slug = slugify(publication.title)
             publication.author.save()
         return super().form_valid(form)
 

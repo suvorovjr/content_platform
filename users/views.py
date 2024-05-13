@@ -1,4 +1,5 @@
 from django.contrib.auth import login
+from pytils.translit import slugify
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.views.generic import TemplateView, CreateView, FormView, ListView, DetailView, UpdateView
@@ -7,6 +8,18 @@ from .forms import UserForm, LoginForm, ConfirmCodeForm, FlagAutorForm, ProfileU
 from .services import get_confirm_code, send_sms_code
 from content.models import Post, Video
 from .models import User
+
+
+class SlugifyMixin:
+
+    def get_unique_slug(self, model, slug_field):
+        base_slug = slugify(slug_field)
+        slug = base_slug
+        count = 1
+        while model.objects.filter(slug=slug).exists():
+            slug = f'{base_slug}-{count}'
+            count += 1
+        return slug
 
 
 class IndexView(TemplateView):
@@ -94,7 +107,7 @@ class ConfirmCodeView(FormView):
         return context_data
 
 
-class FlagAuthorView(FormView):
+class FlagAuthorView(SlugifyMixin, FormView):
     form_class = FlagAutorForm
     template_name = 'users/author_page.html'
     success_url = reverse_lazy('users:index')
@@ -103,7 +116,9 @@ class FlagAuthorView(FormView):
         user = self.request.user
         form = self.get_form()
         if form.is_valid():
-            user.blog_username = form.cleaned_data['blog_username']
+            blog_username = form.cleaned_data['blog_username']
+            user.blog_username = blog_username
+            user.slug = self.get_unique_slug(User, blog_username)
             user.blog_description = form.cleaned_data['blog_description']
             user.subscription_price = form.cleaned_data['subscription_price']
             user.is_author = True

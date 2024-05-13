@@ -16,5 +16,5 @@ urlpatterns = [
     path('profile/', ProfileView.as_view(), name='profile'),
     path('profile/update/', ProfileUpdateView.as_view(), name='profile_update'),
     path('blogger/list/', UserListView.as_view(), name='list'),
-    path('author-profile/<int:pk>', AuthorProfileView.as_view(), name='author_profile'),
+    path('author-profile/<slug:slug>', AuthorProfileView.as_view(), name='author_profile'),
 ]
