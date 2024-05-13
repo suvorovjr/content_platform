@@ -19,9 +19,8 @@
                 <li><a href="{% url 'users:index' %}" class="nav-link px-2 text-white">Главная</a></li>
                 <li><a href="{% url 'users:list' %}" class="nav-link px-2 text-white">Блогеры</a></li>
                 {% if user.is_authenticated %}
-                <li><a href="" class="nav-link px-2 text-white">Мои рассылки</a></li>
-                <li><a href="" class="nav-link px-2 text-white">Мои клиенты</a></li>
-                <li><a href="" class="nav-link px-2 text-white">Логи</a></li>
+                <li><a href="" class="nav-link px-2 text-white">Лента</a></li>
+                <li><a href="" class="nav-link px-2 text-white">Мои подписки</a></li>
                 {% endif %}
             </ul>
             {% if user.is_authenticated %}
@@ -55,7 +54,9 @@
                         {% csrf_token %}
                         <li>
                             <button type="submit" class="dropdown-item"
-                            >Выход</button></li>
+                            >Выход
+                            </button>
+                        </li>
                     </form>
                 </ul>
             </div>
@@ -87,12 +88,8 @@
             <li class="nav-item"><a href="{% url 'users:list' %}" class="nav-link px-2 text-body-secondary">Блогеры</a>
             </li>
             {% if user.is_authenticated %}
-            <li class="nav-item"><a href="" class="nav-link px-2 text-body-secondary">Мои
-                рассылки</a></li>
-            <li class="nav-item"><a href="" class="nav-link px-2 text-body-secondary">Мои
-                клиенты</a></li>
-            <li class="nav-item"><a href=""
-                                    class="nav-link px-2 text-body-secondary">Логи</a></li>
+            <li class="nav-item"><a href="" class="nav-link px-2 text-body-secondary">Лента</a></li>
+            <li class="nav-item"><a href="" class="nav-link px-2 text-body-secondary">Мои подписки</a></li>
             {% endif %}
         </ul>
     </footer>

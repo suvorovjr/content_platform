@@ -1,6 +1,13 @@
 from django.urls import reverse_lazy
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.views import generic
 from .forms import PostForm, VideoForm
+
+
+class IsAdminOrUserMixin(UserPassesTestMixin):
+    def test_func(self):
+        object = self.get_object()
+        return self.request.user == object.author or self.request.user.is_superuser
 
 
 class TitleMixin:
@@ -14,7 +21,7 @@ class TitleMixin:
 
 
 class BaseCreateView(TitleMixin, generic.CreateView):
-    success_url = reverse_lazy('users:index')
+    success_url = reverse_lazy('users:profile')
 
     def form_valid(self, form):
         if form.is_valid():
@@ -28,16 +35,26 @@ class PostCreateView(BaseCreateView):
     form_class = PostForm
     template_name = 'content/post_form.html'
     title = 'Создание поста'
+    success_url = reverse_lazy('users:profile')
 
 
 class VideoCreateView(BaseCreateView):
     form_class = VideoForm
     template_name = 'content/video_form.html'
     title = 'Создание видео'
+    success_url = reverse_lazy('users:profile')
 
 
-class PostUpdateView(generic.UpdateView):
-    pass
+class PostUpdateView(TitleMixin, generic.UpdateView):
+    form_class = PostForm
+    success_url = reverse_lazy('users:profile')
+    title = 'Измененние поста'
+
+
+class VideoUpdateView(TitleMixin, generic.UpdateView):
+    form_class = VideoForm
+    success_url = reverse_lazy('users:profile')
+    title = 'Измененние видео'
 
 
 class FeedListView(generic.ListView):
