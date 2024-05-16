@@ -1,5 +1,4 @@
 from django.urls import reverse_lazy
-from pytils.translit import slugify
 from django.contrib.auth.mixins import UserPassesTestMixin
 from common.mixins import SlugifyMixin, TitleMixin
 from django.views import generic
@@ -21,7 +20,6 @@ class BaseCreateView(SlugifyMixin, TitleMixin, generic.CreateView):
             publication = form.save()
             publication.author = self.request.user.author
             publication.slug = self.get_unique_slug(publication.title)
-            publication.slug = slugify(publication.title)
             publication.author.save()
         return super().form_valid(form)
 
@@ -58,9 +56,19 @@ class FeedListView(generic.ListView):
     pass
 
 
-class PostDetailView(generic.DetailView):
-    pass
+class PostDetailView(TitleMixin, generic.DetailView):
+    model = Post
+    title = 'Просмотр статьи'
+
+
+class VideoDetailView(TitleMixin, generic.DetailView):
+    model = Video
+    title = 'Просмотр видео'
 
 
 class PostDeleteView(generic.DeleteView):
+    pass
+
+
+class VideoDeleteView(generic.DeleteView):
     pass
