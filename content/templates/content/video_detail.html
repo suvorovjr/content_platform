@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<main class="container mt-3">
+    <button class="btn btn-dark" onclick="window.history.back();">Назад</button>
+    <div class="card my-4 mx-auto">
+        <div class="card-body m-2 m-md-4">
+            <article class="row">
+                <div class="col-5"><img src="/media/{{ object.imagine }}" class="img-fluid" alt=""></div>
+                <div class="col-7">
+                    <section class="teacher=info">
+
+                        <h1 class="h2">{{ object.title }}</h1>
+                        <video width="640" height="480" controls>
+                            <source src="{{ object.video.url }}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <p>Дата публикации: {{ object.created_at }}</p>
+                        <p>{{ object.body }}</p>
+
+                    </section>
+                </div>
+            </article>
+        </div>
+    </div>
+</main>
+{% endblock %}
