@@ -4,7 +4,7 @@ from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.views.generic import TemplateView, CreateView, FormView, ListView, DetailView, UpdateView
 from django.contrib.auth.views import LoginView as BaseLoginView
-from .forms import UserForm, LoginForm, ConfirmCodeForm, CreateAuthorForm, ProfileUpdateForm
+from .forms import UserForm, LoginForm, ConfirmCodeForm, CreateAuthorForm, ProfileUpdateForm, UserSetPasswordForm
 from .services import get_confirm_code, send_sms_code
 from content.models import Post, Video
 from .models import User, Author
@@ -133,7 +133,25 @@ class AuthorDetailView(DetailView):
         author = self.get_object()
         posts = Post.objects.filter(author=author).values()
         videos = Video.objects.filter(author=author).values()
+        for post_dict in posts:
+            post_dict['type'] = 'post'
         combined_data = sorted(list(posts) + list(videos), key=lambda x: x['created_at'], reverse=True)
         context_data['object_list'] = combined_data
         context_data['title'] = f'Профиль {author.blog_name}'
         return context_data
+
+
+class UserSetPasswordView(TitleMixin, FormView):
+    form_class = UserSetPasswordForm
+    template_name = 'users/set_password.html'
+    success_url = reverse_lazy('users:index')
+    title = 'Задать пароль'
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
