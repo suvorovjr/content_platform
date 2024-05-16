@@ -5,7 +5,7 @@
     <div class="card my-4 mx-auto">
         <div class="card-body m-2 m-md-4">
             <article class="row">
-                <div class="col-5"><img src="{{ object.avatar|my_avatar }}" tyle="width: 450px; height: 450px;"
+                <div class="col-5"><img src="{{ object.user.avatar|my_avatar }}" tyle="width: 450px; height: 450px;"
                                         class="img-fluid" alt=""></div>
                 <div class="col-7">
 
@@ -28,16 +28,27 @@
     <h1 class="h1 text-center w-50 mx-auto mt-1 py-5 mb-4"><strong>У автора пока нет публикаций</strong></h1>
     {% else %}
     <h1 class="h1 text-center w-50 mx-auto mt-1 py-5 mb-4"><strong>Лента:</strong></h1>
-    {% for object in object_list %}
-    <div class="pc-container" style="background-image: url('/media/{{ object.imagine }}');">
+    {% for obj in object_list %}
+    <div class="pc-container" style="background-image: url('/media/{{ obj.imagine }}');">
         <div class="pc-cover">
             <div class="pc-header">
-                <h2 class="pc-title"><a href="" class="pc-link">{{ object.title }}</a></h2>
-                <p class="pc-description">{{ object.body|truncatechars:150 }}</p>
+                {% if obj.type == 'post' %}
+                <h2 class="pc-title"><a href="{% url 'content:post-detail' obj.slug %}" class="pc-link">
+                    {{ obj.title }}</a></h2>
+                {% else %}
+                <h2 class="pc-title"><a href="{% url 'content:video-detail' obj.slug %}" class="pc-link">
+                    {{ obj.title }}</a></h2>
+                {% endif %}
+                <p class="pc-description">{{ obj.body|truncatechars:150 }}</p>
             </div>
             <div class="pc-footer">
-                <span class="pc-date">{{ object.created_at|date }} в {{ object.created_at|time }}</span>
-                <a href="ссылка-на-пост.html" class="pc-more-btn">Подробнее</a>
+                <span class="pc-date">{{ obj.created_at|date }} в {{ obj.created_at|time }}</span>
+                {% if obj.type == 'post' %}
+                <a href="{% url 'content:post-detail' obj.slug %}" class="pc-more-btn">Подробнее</a>
+                {% else %}
+                <a href="{% url 'content:video-detail' obj.slug %}" class="pc-more-btn">Подробнее</a>
+                {% endif %}
+
             </div>
         </div>
     </div>
