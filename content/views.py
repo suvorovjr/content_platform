@@ -1,25 +1,16 @@
 from django.urls import reverse_lazy
 from pytils.translit import slugify
 from django.contrib.auth.mixins import UserPassesTestMixin
-from users.views import SlugifyMixin
+from common.mixins import SlugifyMixin, TitleMixin
 from django.views import generic
 from .forms import PostForm, VideoForm
+from .models import Post, Video
 
 
-class IsAdminOrUserMixin(UserPassesTestMixin):
-    def test_func(self):
-        object = self.get_object()
-        return self.request.user == object.author or self.request.user.is_superuser
-
-
-class TitleMixin:
-    title = None
-
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        if self.title is not None:
-            context_data['title'] = self.title
-        return context_data
+# class IsAdminOrUserMixin(UserPassesTestMixin):
+#     def test_func(self):
+#         object = self.get_object()
+#         return self.request.user == object.author or self.request.user.is_superuser
 
 
 class BaseCreateView(SlugifyMixin, TitleMixin, generic.CreateView):
@@ -28,14 +19,15 @@ class BaseCreateView(SlugifyMixin, TitleMixin, generic.CreateView):
     def form_valid(self, form):
         if form.is_valid():
             publication = form.save()
-            publication.author = self.request.user
-            publication.slug = self.get_unique_slug(self.model, publication.title)
+            publication.author = self.request.user.author
+            publication.slug = self.get_unique_slug(publication.title)
             publication.slug = slugify(publication.title)
             publication.author.save()
         return super().form_valid(form)
 
 
 class PostCreateView(BaseCreateView):
+    model = Post
     form_class = PostForm
     template_name = 'content/post_form.html'
     title = 'Создание поста'
@@ -43,6 +35,7 @@ class PostCreateView(BaseCreateView):
 
 
 class VideoCreateView(BaseCreateView):
+    model = Video
     form_class = VideoForm
     template_name = 'content/video_form.html'
     title = 'Создание видео'

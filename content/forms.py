@@ -1,6 +1,6 @@
 from django import forms
 from .models import Post, Video
-from users.forms import StylesMixin
+from common.mixins import StylesMixin
 
 
 class BaseForm(forms.ModelForm):

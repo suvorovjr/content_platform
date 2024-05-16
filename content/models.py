@@ -1,12 +1,12 @@
 import uuid
 from django.db import models
-from users.models import User, NULLABLE
+from users.models import Author, NULLABLE
 
 
 class AbstractPublication(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     slug = models.CharField(max_length=50, unique=True, verbose_name='Слаг', **NULLABLE)
-    author = models.ForeignKey(User, on_delete=models.CASCADE, **NULLABLE)
+    author = models.ForeignKey(Author, on_delete=models.CASCADE, **NULLABLE)
     title = models.CharField(max_length=155, verbose_name='Заголовок')
     body = models.TextField(verbose_name='Информациионный блок')
     video = models.FileField(upload_to='videos/', verbose_name='Видео')
