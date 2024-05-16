@@ -1,41 +1,26 @@
 from django.contrib.auth import login
-from pytils.translit import slugify
+from common.mixins import SlugifyMixin, TitleMixin
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.views.generic import TemplateView, CreateView, FormView, ListView, DetailView, UpdateView
 from django.contrib.auth.views import LoginView as BaseLoginView
-from .forms import UserForm, LoginForm, ConfirmCodeForm, FlagAutorForm, ProfileUpdateForm
+from .forms import UserForm, LoginForm, ConfirmCodeForm, CreateAuthorForm, ProfileUpdateForm
 from .services import get_confirm_code, send_sms_code
 from content.models import Post, Video
-from .models import User
+from .models import User, Author
 
 
-class SlugifyMixin:
-
-    def get_unique_slug(self, model, slug_field):
-        base_slug = slugify(slug_field)
-        slug = base_slug
-        count = 1
-        while model.objects.filter(slug=slug).exists():
-            slug = f'{base_slug}-{count}'
-            count += 1
-        return slug
-
-
-class IndexView(TemplateView):
+class IndexView(TitleMixin, TemplateView):
     template_name = 'users/index.html'
-
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        context_data['title'] = 'Главная'
-        return context_data
+    title = 'Главная'
 
 
-class UserCreateView(CreateView):
+class UserCreateView(TitleMixin, CreateView):
     template_name = 'users/phone_signin.html'
     model = User
     form_class = UserForm
     success_url = reverse_lazy('users:confirm_code')
+    title = 'Вход'
 
     def post(self, request, *args, **kwargs):
         self.object = None
@@ -52,26 +37,18 @@ class UserCreateView(CreateView):
         else:
             return self.form_invalid(form)
 
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        context_data['title'] = 'Вход'
-        return context_data
 
-
-class LoginView(BaseLoginView):
+class LoginView(TitleMixin, BaseLoginView):
     template_name = 'users/password_signin.html'
     form_class = LoginForm
-
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        context_data['title'] = 'Вход'
-        return context_data
+    title = 'Вход'
 
 
-class ConfirmCodeView(FormView):
+class ConfirmCodeView(TitleMixin, FormView):
     form_class = ConfirmCodeForm
     template_name = 'users/confirm_code.html'
     success_url = reverse_lazy('users:index')
+    title = 'Подтверждение номера'
 
     def post(self, request, *args, **kwargs):
         form = self.get_form()
@@ -101,79 +78,54 @@ class ConfirmCodeView(FormView):
             send_sms_code(phone_number, confirm_code)
         return self.render_to_response(context_data)
 
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        context_data['title'] = 'Подтверждение номера'
-        return context_data
 
-
-class FlagAuthorView(SlugifyMixin, FormView):
-    form_class = FlagAutorForm
-    template_name = 'users/author_page.html'
-    success_url = reverse_lazy('users:index')
-
-    def post(self, request, *args, **kwargs):
-        user = self.request.user
-        form = self.get_form()
-        if form.is_valid():
-            blog_username = form.cleaned_data['blog_username']
-            user.blog_username = blog_username
-            user.slug = self.get_unique_slug(User, blog_username)
-            user.blog_description = form.cleaned_data['blog_description']
-            user.subscription_price = form.cleaned_data['subscription_price']
-            user.is_author = True
-            user.save()
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
-
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        context_data['title'] = 'Стать автором'
-        return context_data
-
-
-class UserListView(ListView):
-    model = User
-    template_name = 'users/authors_list.html'
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        context_data['object_list'] = User.objects.filter(is_author=True)
-        context_data['title'] = 'Блогеры'
-        return context_data
-
-
-class ProfileView(DetailView):
+class ProfileView(TitleMixin, DetailView):
     model = User
     template_name = 'users/profile.html'
-
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        context_data['title'] = 'Профиль'
-        return context_data
+    title = 'Профиль'
 
     def get_object(self, queryset=None):
         return self.request.user
 
 
-class ProfileUpdateView(UpdateView):
+class ProfileUpdateView(TitleMixin, UpdateView):
     model = User
     form_class = ProfileUpdateForm
     template_name = 'users/update_profile.html'
     success_url = reverse_lazy('users:profile')
-
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        context_data['title'] = 'Редактирование профиля'
-        return context_data
+    title = 'Редактирование профиля'
 
     def get_object(self, queryset=None):
         return self.request.user
 
 
-class AuthorProfileView(DetailView):
-    model = User
+class AuthorCreateView(TitleMixin, SlugifyMixin, CreateView):
+    form_class = CreateAuthorForm
+    model = Author
+    template_name = 'users/author_page.html'
+    success_url = reverse_lazy('users:index')
+    title = 'Стать автором'
+
+    def form_valid(self, form):
+        if form.is_valid():
+            user = self.request.user
+            author = form.save()
+            author.user = user
+            author.slug = self.get_unique_slug(author.blog_name)
+            user.is_author = True
+            author.save()
+            user.save()
+        return super().form_valid(form)
+
+
+class AuthorListView(TitleMixin, ListView):
+    model = Author
+    template_name = 'users/authors_list.html'
+    title = 'Блогеры'
+
+
+class AuthorDetailView(DetailView):
+    model = Author
     template_name = 'users/author_profile.html'
 
     def get_context_data(self, **kwargs):
@@ -183,5 +135,5 @@ class AuthorProfileView(DetailView):
         videos = Video.objects.filter(author=author).values()
         combined_data = sorted(list(posts) + list(videos), key=lambda x: x['created_at'], reverse=True)
         context_data['object_list'] = combined_data
-        context_data['title'] = f'Профиль {author.blog_username}'
+        context_data['title'] = f'Профиль {author.blog_name}'
         return context_data

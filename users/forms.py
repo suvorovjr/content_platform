@@ -1,13 +1,7 @@
 from django.contrib.auth.forms import AuthenticationForm, UserChangeForm
-from users.models import User
+from common.mixins import StylesMixin
+from users.models import User, Author
 from django import forms
-
-
-class StylesMixin:
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for field_name, field in self.fields.items():
-            field.widget.attrs['class'] = 'form-control'
 
 
 class UserForm(StylesMixin, forms.ModelForm):
@@ -55,18 +49,18 @@ class ConfirmCodeForm(StylesMixin, forms.Form):
         return confirm_code
 
 
-class FlagAutorForm(StylesMixin, forms.ModelForm):
+class CreateAuthorForm(StylesMixin, forms.ModelForm):
     class Meta:
-        model = User
-        fields = ('blog_username', 'blog_description', 'subscription_price')
+        model = Author
+        fields = ('blog_name', 'blog_description', 'subscription_price')
 
-    def clean_blog_username(self):
-        blog_username = str(self.cleaned_data['blog_username'])
-        if User.objects.filter(blog_username=blog_username).exists():
+    def clean_blog_name(self):
+        blog_name = str(self.cleaned_data['blog_name'])
+        if Author.objects.filter(blog_name=blog_name).exists():
             raise forms.ValidationError('Это название блога занято')
-        if len(blog_username) < 3:
+        if len(blog_name) < 3:
             raise forms.ValidationError('Название блога не может быть меньше 3 символов')
-        return blog_username
+        return blog_name
 
     def clean_blog_description(self):
         blog_description = str(self.cleaned_data['blog_description'])
