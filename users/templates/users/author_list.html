@@ -40,7 +40,12 @@
                             <h2 class="h4">{{ object.blog_name }}</h2>
                             <p style="text-align: justify;">{{ object.blog_description|truncatechars:150 }}</p>
                             <div class="d-flex justify-content-end align-items-end" style="height: 100px;">
-                                <a href="profile.html" class="btn btn-outline-success btn-sm mr-3 mx-2">Подписаться</a>
+                                <form action="{% url 'payment:subscribe_author' %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="author_id" value="{{ object.id }}">
+                                    <button class="btn btn-outline-success btn-sm mr-3 mx-2" type="submit">Подписаться
+                                    </button>
+                                </form>
                                 <a href="{% url 'users:author_profile' object.slug %}"
                                    class="btn btn-outline-primary btn-sm mr-3 mx-2">Показать
                                     информацию</a>
