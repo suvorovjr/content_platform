@@ -102,7 +102,7 @@ class ProfileUpdateView(TitleMixin, UpdateView):
 class AuthorCreateView(TitleMixin, SlugifyMixin, CreateView):
     form_class = CreateAuthorForm
     model = Author
-    template_name = 'users/author_page.html'
+    template_name = 'users/author_form.html'
     success_url = reverse_lazy('users:index')
     title = 'Стать автором'
 
@@ -120,13 +120,13 @@ class AuthorCreateView(TitleMixin, SlugifyMixin, CreateView):
 
 class AuthorListView(TitleMixin, ListView):
     model = Author
-    template_name = 'users/authors_list.html'
+    template_name = 'users/author_list.html'
     title = 'Блогеры'
 
 
 class AuthorDetailView(DetailView):
     model = Author
-    template_name = 'users/author_profile.html'
+    template_name = 'users/author_detail.html'
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)

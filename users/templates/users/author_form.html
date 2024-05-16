@@ -9,7 +9,7 @@
                     {% csrf_token %}
                     <h2 class="h2 mb-3 fw-normal text-center">{{ title }}</h2>
                     <div class="input-group input-group-lg mb-3">
-                        {{ form.blog_username|add_placeholder:'Название блога' }}
+                        {{ form.blog_name|add_placeholder:'Название блога' }}
                     </div>
                     <div class="input-group input-group-lg mb-3">
                         {{ form.blog_description|add_placeholder:'Описание блога' }}
@@ -18,7 +18,7 @@
                         {{ form.subscription_price|add_placeholder:'Стоимость подписки/мес' }}
                     </div>
                     <br>
-                    {{ form.blog_username.errors }}
+                    {{ form.blog_name.errors }}
                     {{ form.blog_description.errors }}
                     {{ form.subscription_price.errors }}
                     {% if form.errors %}

@@ -10,7 +10,7 @@
                 <div class="col-7">
 
                     <section class="teacher=info">
-                        <h1 class="h2">{{ object.blog_username }}</h1>
+                        <h1 class="h2">{{ object.blog_name }}</h1>
                         <p style="text-align: justify;">{{ object.blog_description }}</p>
                         <p class="text-end"><span class="badge badge-secondary mr-2">Для путешествий </span>Стоимость
                             подписки: {{ object.subscription_price }} / мес.</p>
@@ -24,6 +24,9 @@
             </article>
         </div>
     </div>
+    {% if not object_list %}
+    <h1 class="h1 text-center w-50 mx-auto mt-1 py-5 mb-4"><strong>У автора пока нет публикаций</strong></h1>
+    {% else %}
     <h1 class="h1 text-center w-50 mx-auto mt-1 py-5 mb-4"><strong>Лента:</strong></h1>
     {% for object in object_list %}
     <div class="pc-container" style="background-image: url('/media/{{ object.imagine }}');">
@@ -39,5 +42,6 @@
         </div>
     </div>
     {% endfor %}
+    {% endif %}
 </main>
 {% endblock %}

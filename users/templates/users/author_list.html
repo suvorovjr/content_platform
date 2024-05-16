@@ -32,15 +32,17 @@
             <div class="card mb-4">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-3"><img src="{{ object.avatar|my_avatar }}" class="img-fluid"
+                        <div class="col-3"><img src="{{ object.user.avatar|my_avatar }}"
+                                                class="img-fluid rounded-circle border"
                                                 style="width: auto; height: 200px;" alt=""></div>
                         <div class="col-9">
                             <p class="text-end">Стоимость подписки: {{ object.subscription_price }} / мес</p>
-                            <h2 class="h4">{{ object.blog_username }}</h2>
+                            <h2 class="h4">{{ object.blog_name }}</h2>
                             <p style="text-align: justify;">{{ object.blog_description|truncatechars:150 }}</p>
                             <div class="d-flex justify-content-end align-items-end" style="height: 100px;">
                                 <a href="profile.html" class="btn btn-outline-success btn-sm mr-3 mx-2">Подписаться</a>
-                                <a href="{% url 'users:author_profile' object.pk %}" class="btn btn-outline-primary btn-sm mr-3 mx-2">Показать
+                                <a href="{% url 'users:author_profile' object.slug %}"
+                                   class="btn btn-outline-primary btn-sm mr-3 mx-2">Показать
                                     информацию</a>
                             </div>
                         </div>
