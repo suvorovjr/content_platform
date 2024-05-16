@@ -10,12 +10,11 @@
         {% else %}
         <h2 class="fw-normal">{{ object.email }}</h2>
         {% endif %}
-        <a style="margin-top: 10px;" class="btn btn-secondary" href="{% url 'users:profile_update' %}">Редактировать
+        <a style="margin-top: 10px;" class="btn btn-secondary mx-2" href="{% url 'users:profile_update' %}">Редактировать
             профиль</a>
-        <a style="margin-top: 10px;" class="btn btn-secondary" href="{% url 'users:set_password' %}">Задать пароль</a>
+        {% if not request.user.password %}
+        <a style="margin-top: 10px;" class="btn btn-secondary mx-2" href="{% url 'users:set_password' %}">Задать пароль</a>
+        {% endif %}
     </div>
-    {% if user.is_author %}
-    <h2 class="display-5 text-center p-3">Вы не выложили контент.</h2>
-    {% endif %}
 </div>
 {% endblock %}
