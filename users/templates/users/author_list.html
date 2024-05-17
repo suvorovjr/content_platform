@@ -3,32 +3,11 @@
 {% load my_tags %}
 {% block content %}
 <main class="container mt-3">
-    <h1 class="h1 text-center w-50 mx-auto mt-1 py-5 mb-4"><strong>Все авторы</strong></h1>
+    <h1 class="h1 text-center w-50 mx-auto mt-1 py-5 mb-4"><strong>Все авторы:</strong></h1>
 
 
     <div class="row">
         <div class="col-12 col-lg-10 offset-lg-1 m-auto">
-
-
-            <div class="card mb-4">
-                <div class="card-body align-right">
-
-                    <p class="lead float-left d-inline-block mt-2 mb-0"><strong>15 преподавателей в базе</strong></p>
-
-                    <form class="float-right d-inline-block">
-                        <div class="form-inline">
-                            <select class="custom-select my-1 mr-2" id="inlineFormCustomSelectPref">
-                                <option selected>В случайном порядке</option>
-                                <option value="3">Сначала лучшие по рейтингу</option>
-                                <option value="1">Сначала дорогие</option>
-                                <option value="2">Сначала недорогие</option>
-                            </select>
-                            <button type="submit" class="btn btn-primary my-1">Сортировать</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
             {% for object in object_list %}
             <div class="card mb-4">
                 <div class="card-body">
@@ -41,15 +20,27 @@
                             <h2 class="h4">{{ object.blog_name }}</h2>
                             <p style="text-align: justify;">{{ object.blog_description|truncatechars:150 }}</p>
                             <div class="d-flex justify-content-end align-items-end" style="height: 100px;">
+                                {% if request.user.is_authenticated %}
                                 <form action="{% url 'payment:subscribe_author' %}" method="post">
-                                    {% csrf_token %}
                                     <input type="hidden" name="author_id" value="{{ object.id }}">
-                                    <button class="btn btn-outline-success btn-sm mr-3 mx-2" type="submit">Подписаться
-                                    </button>
-                                </form>
-                                <a href="{% url 'users:author_profile' object.slug %}"
-                                   class="btn btn-outline-primary btn-sm mr-3 mx-2">Показать
-                                    информацию</a>
+                                    {% else %}
+                                    <form action="{% url 'users:login' %}" method="get">
+                                        {% endif %}
+                                        {% csrf_token %}
+                                        {% is_subscribed request.user object as subscription_status %}
+                                        {% if subscription_status %}
+                                        <button class="btn btn-outline-danger btn-sm mr-3 mx-2" type="submit">
+                                            Отписаться
+                                        </button>
+                                        {% else %}
+                                        <button class="btn btn-outline-success btn-sm mr-3 mx-2" type="submit">
+                                            Подписаться
+                                        </button>
+                                        {% endif %}
+                                    </form>
+                                    <a href="{% url 'users:author_profile' object.slug %}"
+                                       class="btn btn-outline-primary btn-sm mr-3 mx-2">Показать
+                                        информацию</a>
                             </div>
                         </div>
                     </div>
@@ -57,11 +48,6 @@
             </div>
             {% endfor %}
         </div>
-    </div>
-    <h2 class="text-center mt-5 mb-3">Не нашли своего репетитора?</h2>
-    <p class="text-center mb-4">Расскажите, кто вам нужен и мы подберем его сами</p>
-    <div class="text-center pb-5">
-        <a href="request.html" class="btn btn-primary">Заказать подбор</a>
     </div>
 </main>
 {% endblock %}

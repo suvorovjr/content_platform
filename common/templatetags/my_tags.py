@@ -1,4 +1,5 @@
 from django import template
+from payment.models import Subscription
 
 register = template.Library()
 
@@ -22,3 +23,8 @@ def my_avatar(imagine):
     if imagine:
         return f'/media/{imagine}'
     return '/static/imagine/avatar_stub.jpeg'
+
+
+@register.simple_tag()
+def is_subscribed(user, author):
+    return Subscription.objects.filter(user=user, author=author, is_active=True).exists

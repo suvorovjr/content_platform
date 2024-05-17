@@ -15,6 +15,9 @@ class SubscribeToAuthor(View):
             Subscription.objects.create(user=request.user, author=author)
         else:
             subscription = Subscription.objects.get(user=request.user, author=author)
-            subscription.is_active = False
+            if subscription.is_active:
+                subscription.is_active = False
+            else:
+                subscription.is_active = True
             subscription.save()
         return redirect(reverse_lazy('users:index'))
