@@ -1,4 +1,13 @@
 {% extends 'base.html' %}
 {% block content %}
-Hello world
+<section class="welcome">
+    <h1>Добро пожаловать на BoostContent!</h1>
+    <p>Откройте для себя лучшие статьи, рассказы и публикации от талантливых авторов со всего мира.</p>
+</section>
+
+<section class="call-to-action">
+    <h2>Готовы поделиться своими историями?</h2>
+    <p>Присоединяйтесь к нашему сообществу творческих людей уже сегодня.</p>
+    <a href="{% url 'users:login' %}" class="btn btn-outline-dark mr-3 mx-2">Начать публиковаться</a>
+</section>
 {% endblock %}

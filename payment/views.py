@@ -1,4 +1,5 @@
 import stripe
+from common.mixins import TitleMixin
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from django.shortcuts import redirect
@@ -31,6 +32,17 @@ class SubscribeToAuthor(View):
                 subscription.is_active = True
             subscription.save()
         return redirect(request.META['HTTP_REFERER'])
+
+
+class UserSubscription(TitleMixin, generic.ListView):
+    model = Subscription
+    title = 'Мои подписки'
+    template_name = 'payment/subscription_list.html'
+
+    def get_queryset(self):
+        user = self.request.user
+        queryset = Subscription.objects.filter(user=user, is_active=True)
+        return queryset
 
 
 class PaymentCreateView(View):

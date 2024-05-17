@@ -61,3 +61,79 @@
   text-decoration: none;
   color: white;
 }
+
+.welcome,
+.featured-content,
+.call-to-action {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.subscription-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+}
+
+.author-info {
+    display: flex;
+    align-items: center;
+}
+
+.author-avatar img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.author-avatar,
+.author-nickname {
+    margin-right: 15px;
+    text-decoration: none;
+    color: #333;
+}
+
+.author-nickname {
+    font-weight: bold;
+}
+
+.subscription-actions {
+    display: flex;
+    align-items: center;
+}
+
+.button {
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 0.9em;
+    margin-left: 10px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    transition: 0.3s;
+}
+
+.unsubscribe {
+    background-color: #f44336;
+    color: white;
+}
+
+.unsubscribe:hover {
+    background-color: #d32f2f;
+}
+
+.details {
+    background-color: #4caf50;
+    color: white;
+    display: inline-block;
+}
+
+.details:hover {
+    background-color: #388e3c;
+}

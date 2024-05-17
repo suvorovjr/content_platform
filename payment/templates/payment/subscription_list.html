@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load my_tags %}
+{% block content %}
+<main class="container mt-3">
+    {% if not object_list %}
+    <h1 class="h1 text-center w-50 mx-auto mt-1 py-5 mb-4"><strong>У вас пока нет активных подписок.</strong></h1>
+    {% endif %}
+    {% for object in object_list %}
+    <div class="subscription-card">
+        <div class="author-info">
+            <a href="{% url 'users:author_profile' object.author.slug %}" class="author-avatar">
+                <img src="{{ object.author.user.avatar|my_avatar }}" alt="Avatar">
+            </a>
+            <a href="{% url 'users:author_profile' object.author.slug %}" class="author-nickname">
+                {{ object.author.blog_name }}</a>
+        </div>
+        <div class="subscription-actions">
+            <form action="{% url 'payment:subscribe_author' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="author_id" value="{{ object.author.id }}">
+                <button type="submit" class="button unsubscribe">Отписаться</button>
+            </form>
+
+            <a href="{% url 'users:author_profile' object.author.slug %}" class="button details">Подробнее</a>
+        </div>
+    </div>
+    {% endfor %}
+</main>
+{% endblock %}

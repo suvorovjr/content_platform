@@ -153,7 +153,7 @@ class UserSetPasswordView(TitleMixin, FormView):
     form_class = UserSetPasswordForm
     template_name = 'users/set_password.html'
     success_url = reverse_lazy('users:index')
-    title = 'Задать пароль'
+    title = 'Установление пароля'
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
