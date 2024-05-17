@@ -2,7 +2,7 @@ import stripe
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from django.shortcuts import redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseForbidden
 from django.views import View
 from django.views import generic
 from django.conf import settings
@@ -19,6 +19,8 @@ class SubscribeToAuthor(View):
         author_id = self.request.POST.get('author_id', None)
         user = self.request.user
         author = Author.objects.get(id=author_id)
+        if user.author == author if user.is_author else None:
+            return HttpResponseForbidden("Вы не можете подписаться на себя.")
         if not Subscription.objects.filter(user=user, author=author).exists():
             Subscription.objects.create(user=request.user, author=author)
         else:

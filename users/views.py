@@ -123,6 +123,14 @@ class AuthorListView(TitleMixin, ListView):
     template_name = 'users/author_list.html'
     title = 'Блогеры'
 
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_author:
+            queryset = Author.objects.exclude(id=user.author.id)
+        else:
+            queryset = Author.objects.all()
+        return queryset
+
 
 class AuthorDetailView(DetailView):
     model = Author
