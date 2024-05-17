@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load my_tags %}
+{% block content %}
+<main class="container mt-3">
+    <!-- HERO -->
+    <div class="row mt-5">
+        <div class="col-10 col-md-6 offset-1 offset-md-3">
+            <div class="card mb-3">
+                <div class="card-body text-center pt-5">
+                    <img src="../static/check.png" class="mb-3" width="65" alt="">
+                    <h2 class="h3 card-title mt-4 mb-2">Отказано в доступе!</h2>
+                    <p>Для просмотра этого контента необхожимо оплатить подписку!</p>
+                </div>
+                <hr/>
+                <div class="card-body mx-5">
+                    <div class="d-flex justify-content-end align-items-end" style="height: 50px;">
+                        <button class="btn btn-outline-dark mr-3 mx-2" onclick="window.history.back();">Назад</button>
+                        {% if request.user.is_authenticated %}
+                        <form action="{% url 'payment:pay' %}" method="post">
+                            <input type="hidden" name="author_id" value="{{ author_id }}">
+                            {% else %}
+                            <form action="{% url 'users:login' %}" method="get">
+                                {% endif %}
+                                {% csrf_token %}
+                                <button class="btn btn-outline-success mr-3 mx-2" type="submit">
+                                    Купить подписку
+                                </button>
+                            </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

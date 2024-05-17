@@ -1,17 +1,27 @@
-from django.urls import reverse_lazy
-from django.contrib.auth.mixins import UserPassesTestMixin
+from django.http import HttpResponseRedirect
+from django.urls import reverse_lazy, reverse
+from django.contrib.auth.mixins import LoginRequiredMixin
+from datetime import datetime
 from itertools import chain
 from common.mixins import SlugifyMixin, TitleMixin
 from django.views import generic
 from .forms import PostForm, VideoForm
-from payment.models import Subscription
+from payment.models import Payment, Subscription
 from .models import Post, Video
 
 
-# class IsAdminOrUserMixin(UserPassesTestMixin):
-#     def test_func(self):
-#         object = self.get_object()
-#         return self.request.user == object.author or self.request.user.is_superuser
+class BaseDetailView(generic.DetailView):
+
+    def dispatch(self, request, *args, **kwargs):
+        publication = self.get_object()
+        if publication.is_paid_content:
+            is_paid = Payment.objects.filter(user=request.user, author=publication.author,
+                                             end_date__gt=datetime.now()).exists()
+            is_author = publication.author == request.user.author if request.user.is_author else False
+            if not is_paid and not is_author:
+                redirect_url = f"{reverse('payment:pay_offer')}?author_id={publication.author.id}"
+                return HttpResponseRedirect(redirect_url)
+        return super().dispatch(request, *args, **kwargs)
 
 
 class BaseCreateView(SlugifyMixin, TitleMixin, generic.CreateView):
@@ -67,12 +77,12 @@ class FeedListView(generic.ListView):
         return combined_results
 
 
-class PostDetailView(TitleMixin, generic.DetailView):
+class PostDetailView(TitleMixin, BaseDetailView):
     model = Post
     title = 'Просмотр статьи'
 
 
-class VideoDetailView(TitleMixin, generic.DetailView):
+class VideoDetailView(TitleMixin, BaseDetailView):
     model = Video
     title = 'Просмотр видео'
 

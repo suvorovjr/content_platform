@@ -4,6 +4,7 @@ from dateutil.relativedelta import relativedelta
 from django.shortcuts import redirect
 from django.http import HttpResponse
 from django.views import View
+from django.views import generic
 from django.conf import settings
 from .models import Subscription, Payment
 from .services import get_payment
@@ -47,6 +48,17 @@ class PaymentCreateView(View):
         else:
             payment = Payment.objects.get(user=user, author=author, is_paid=False)
         return redirect(payment.stripe_url)
+
+
+class PayOfferView(generic.TemplateView):
+    template_name = 'payment/pay_offer.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        author_id = self.request.GET.get('author_id')
+        if author_id:
+            context['author_id'] = author_id
+        return context
 
 
 @require_POST
