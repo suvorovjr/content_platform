@@ -6,7 +6,7 @@ class StripeAPIClient:
     Клаас для работы с сервисом Stripe
     """
 
-    def __init__(self, api_key, amount, product_name, currency='rub'):
+    def __init__(self, api_key, amount, product_name, user, currency='rub'):
         """
         Инициализатор класса для работы с сервисом Stripe
         :param api_key: API ключ для работы с сервисом Stripe
@@ -19,7 +19,8 @@ class StripeAPIClient:
         self.amount = amount * 100
         self.product_name = product_name
         self.currency = currency
-        self.stripe_payment_id = None
+        self.stripe_customer_id = None
+        self.user = user
         stripe.api_key = self.api_key
 
     def create_price(self):
@@ -38,6 +39,15 @@ class StripeAPIClient:
         price_id = response.id
         return price_id
 
+    def customer_create(self):
+        customer = stripe.Customer.create(
+            email=self.user.email,
+            name=self.user.first_name,
+            phone=self.user.phone_number
+        )
+        customer_id = customer.id
+        return customer_id
+
     def create_session(self):
         """
         Метод для создания платежной сессии
@@ -48,26 +58,28 @@ class StripeAPIClient:
             success_url="https://example.com/success",
             line_items=[{"price": self.create_price(), "quantity": 1}],
             mode="subscription",
+            customer=self.customer_create()
         )
         payment_url = response.url
-        self.stripe_payment_id = response.id
+        self.stripe_customer_id = response.customer
         return payment_url
 
-    def get_stripe_payment_id(self):
+    def get_stripe_customer_id(self):
         """
         Функция для получения stripe id
         :return: stripe id
         """
 
-        return self.stripe_payment_id
+        return self.stripe_customer_id
 
 
-def get_payment(api_key, author):
-    stripe_client = StripeAPIClient(api_key=api_key, amount=author.subscription_price, product_name=author.blog_name)
+def get_payment(api_key, author, user):
+    stripe_client = StripeAPIClient(
+        api_key=api_key, amount=author.subscription_price, product_name=author.blog_name, user=user)
     stripe_url = stripe_client.create_session()
-    stripe_payment_id = stripe_client.get_stripe_payment_id()
+    stripe_customer_id = stripe_client.get_stripe_customer_id()
     payment = {
         'stripe_url': stripe_url,
-        'stripe_payment_id': stripe_payment_id
+        'stripe_customer_id': stripe_customer_id
     }
     return payment
