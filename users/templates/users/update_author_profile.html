@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load my_tags %}
+{% load static %}
+{% block content %}
+<main class="form-signin w-100 m-auto">
+    <div class="container">
+        <button class="btn btn-dark mt-5" onclick="window.history.back();">Назад</button>
+        <div class="row row-centered">
+            <div class="col-6 mt-5 mx-auto">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <h1 class="h3 mb-3 fw-normal text-center">Редактирование профиля автора</h1>
+                    <div class="form-floating">
+                        {{ form.blog_name }}
+                        <label>Название блога</label>
+                    </div>
+                    <div class="form-floating">
+                        {{ form.blog_description }}
+                        <label>Описание блога</label>
+                    </div>
+                    <div class="form-floating">
+                        {{ form.subscription_price }}
+                        <label>Цена подписки на платный контент</label>
+                    </div>
+                    {% for name, error in form.errors.items %}
+                    <br>
+                    <div class="signup-link">{{ error }}</div>
+                    {% if loop.last %}
+                    <br>
+                    {% endif %}
+                    {% endfor %}
+                    {% if form.non_field_errors %}
+                    <small>{{ form.non_field_errors }}</small>
+                    {% else %}
+                    <div class="form-check text-start my-3">
+                        <label class="form-check-label">
+                        </label>
+                    </div>
+                    {% endif %}
+                    <button class="btn btn-primary w-100 py-2" type="submit">Сохранить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
