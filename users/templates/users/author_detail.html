@@ -22,6 +22,7 @@
                                 <form action="{% url 'users:login' %}" method="get">
                                     {% endif %}
                                     {% csrf_token %}
+                                    {% if request.user.is_authenticated %}
                                     {% is_subscribed request.user object as subscription_status %}
                                     {% if subscription_status %}
                                     <button class="btn btn-outline-danger btn-sm mr-3 mx-2" type="submit">
@@ -31,6 +32,7 @@
                                     <button class="btn btn-outline-success btn-sm mr-3 mx-2" type="submit">
                                         Подписаться
                                     </button>
+                                    {% endif %}
                                     {% endif %}
                                 </form>
                                 <a href="{% url 'users:author_profile' object.pk %}"
