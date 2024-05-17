@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import PostCreateView, PostUpdateView, FeedListView, PostDetailView, PostDeleteView
+from .views import PostCreateView, PostUpdateView, PostDetailView, PostDeleteView
 from .views import VideoCreateView, VideoUpdateView, VideoDetailView, VideoDeleteView, FeedListView
 from .apps import ContentConfig
 

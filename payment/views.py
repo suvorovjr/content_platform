@@ -34,7 +34,7 @@ class SubscribeToAuthor(View):
         return redirect(request.META['HTTP_REFERER'])
 
 
-class UserSubscription(TitleMixin, generic.ListView):
+class UserSubscriptionList(TitleMixin, generic.ListView):
     model = Subscription
     title = 'Мои подписки'
     template_name = 'payment/subscription_list.html'

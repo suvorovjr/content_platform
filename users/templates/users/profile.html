@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load my_tags %}
+{% load users_tags %}
 {% block content %}
 <div class="row">
     <div style="text-align:center; margin-top:20px" class="col-lg-6 mx-auto">
@@ -8,12 +9,12 @@
         {% if object.first_name and object.last_name %}
         <h2 class="fw-normal">{{ object.first_name }} {{ object.last_name }}</h2>
         {% else %}
-        <h2 class="fw-normal">{{ object.email }}</h2>
+        <h2 class="fw-normal">+7 {{ object.phone_number|format_phone }}</h2>
         {% endif %}
         <a style="margin-top: 10px;" class="btn btn-secondary mx-2" href="{% url 'users:profile_update' %}">Редактировать
             профиль</a>
         {% if not request.user.password %}
-        <a style="margin-top: 10px;" class="btn btn-secondary mx-2" href="{% url 'users:set_password' %}">Задать пароль</a>
+        <a style="margin-top: 10px;" class="btn btn-secondary mx-2" href="{% url 'users:set_password' %}">Установить пароль</a>
         {% endif %}
     </div>
 </div>
