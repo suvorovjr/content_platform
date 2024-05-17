@@ -47,7 +47,7 @@ class LoginView(TitleMixin, BaseLoginView):
 class ConfirmCodeView(TitleMixin, FormView):
     form_class = ConfirmCodeForm
     template_name = 'users/confirm_code.html'
-    success_url = reverse_lazy('users:index')
+    success_url = reverse_lazy('users:list')
     title = 'Подтверждение номера'
 
     def post(self, request, *args, **kwargs):
@@ -163,3 +163,23 @@ class UserSetPasswordView(TitleMixin, FormView):
     def form_valid(self, form):
         form.save()
         return super().form_valid(form)
+
+
+class AuthorProfileView(TitleMixin, DetailView):
+    model = Author
+    template_name = 'users/author_profile.html'
+    title = 'Профиль автора'
+
+    def get_object(self, queryset=None):
+        return Author.objects.filter(user=self.request.user).first()
+
+
+class AuthorProfileUpdateView(TitleMixin, UpdateView):
+    model = User
+    form_class = CreateAuthorForm
+    template_name = 'users/update_author_profile.html'
+    success_url = reverse_lazy('users:author_profile')
+    title = 'Редактирование профиля автора'
+
+    def get_object(self, queryset=None):
+        return Author.objects.filter(user=self.request.user).first()

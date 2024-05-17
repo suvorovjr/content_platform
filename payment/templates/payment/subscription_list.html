@@ -6,6 +6,7 @@
     <h1 class="h1 text-center w-50 mx-auto mt-1 py-5 mb-4"><strong>У вас пока нет активных подписок.</strong></h1>
     {% endif %}
     {% for object in object_list %}
+    <h1 class="h1 text-center w-50 mx-auto mt-1 py-5 mb-4"><strong>Мои подписки:</strong></h1>
     <div class="subscription-card">
         <div class="author-info">
             <a href="{% url 'users:author_profile' object.author.slug %}" class="author-avatar">

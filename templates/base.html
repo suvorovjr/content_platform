@@ -47,7 +47,7 @@
                     <img src="{{ avatar_url|my_avatar }}" alt="mdo" width="32" height="32" class="rounded-circle">
                 </a>
                 <ul class="dropdown-menu text-small">
-                    <li><a class="dropdown-item" href="">Новая рассылка</a></li>
+                    <li><a class="dropdown-item" href="{% url 'users:author_profile' %}">Профиль автора</a></li>
                     <li><a class="dropdown-item" href="{% url 'users:profile' %}">Профиль</a></li>
                     <li>
                         <hr class="dropdown-divider">

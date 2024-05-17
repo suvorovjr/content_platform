@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load my_tags %}
+{% load users_tags %}
+{% block content %}
+<div class="row">
+    <div style="text-align:center; margin-top:20px" class="col-lg-6 mx-auto">
+        <img style="width:300px; height:300px; margin:auto;" class="bd-placeholder-img rounded-circle border"
+             src="{{ object.user.avatar|my_avatar }}">
+        <h2 class="fw-normal">{{ object.blog_name }}</h2>
+        <a style="margin-top: 10px;" class="btn btn-secondary mx-2" href="{% url 'users:profile_author_update' %}">Редактировать
+            профиль автора</a>
+    </div>
+</div>
+{% endblock %}

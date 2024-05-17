@@ -64,8 +64,9 @@ class VideoUpdateView(TitleMixin, generic.UpdateView):
     title = 'Измененние видео'
 
 
-class FeedListView(generic.ListView):
+class FeedListView(TitleMixin, generic.ListView):
     template_name = 'content/feed.html'
+    title = 'Лента'
 
     def get_queryset(self):
         user = self.request.user
