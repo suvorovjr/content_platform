@@ -21,7 +21,7 @@ class Payment(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='payment_to', verbose_name='Автор')
-    stripe_subscription_id = models.CharField(max_length=255, verbose_name='Stripe ID')
+    stripe_customer_id = models.CharField(max_length=255, verbose_name='Stripe ID')
     stripe_url = models.CharField(max_length=455, verbose_name='Ссылка для оплаты')
     is_paid = models.BooleanField(default=False, verbose_name='Признак оплаты')
     end_date = models.DateField(verbose_name='Дата окончания подписки', **NULLABLE)
