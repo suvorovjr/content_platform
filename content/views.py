@@ -3,6 +3,7 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 from common.mixins import SlugifyMixin, TitleMixin
 from django.views import generic
 from .forms import PostForm, VideoForm
+from payment.models import Subscription
 from .models import Post, Video
 
 
@@ -53,7 +54,16 @@ class VideoUpdateView(TitleMixin, generic.UpdateView):
 
 
 class FeedListView(generic.ListView):
-    pass
+    template_name = 'content/feed.html'
+
+    def get_queryset(self):
+        user = self.request.user
+        authors_ids = Subscription.objects.filter(user=user, is_active=True).values_list('author_id', flat=True)
+        videos = Video.objects.filter(author_id__in=authors_ids)
+        posts = Post.objects.filter(author_id__in=authors_ids)
+        combined_queryset = videos | posts
+        combined_queryset = combined_queryset.order_by('-published_date')
+        return combined_queryset
 
 
 class PostDetailView(TitleMixin, generic.DetailView):

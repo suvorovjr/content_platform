@@ -20,7 +20,7 @@
                 <li><a href="{% url 'users:index' %}" class="nav-link px-2 text-white">Главная</a></li>
                 <li><a href="{% url 'users:list' %}" class="nav-link px-2 text-white">Блогеры</a></li>
                 {% if user.is_authenticated %}
-                <li><a href="" class="nav-link px-2 text-white">Лента</a></li>
+                <li><a href="{% url 'content:feed' %}" class="nav-link px-2 text-white">Лента</a></li>
                 <li><a href="" class="nav-link px-2 text-white">Мои подписки</a></li>
                 {% endif %}
             </ul>
