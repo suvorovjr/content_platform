@@ -60,3 +60,14 @@ class StripeAPIClient:
         """
 
         return self.stripe_payment_id
+
+
+def get_payment(api_key, author):
+    stripe_client = StripeAPIClient(api_key=api_key, amount=author.subscription_price, product_name=author.blog_name)
+    stripe_url = stripe_client.create_session()
+    stripe_payment_id = stripe_client.get_stripe_payment_id()
+    payment = {
+        'stripe_url': stripe_url,
+        'stripe_payment_id': stripe_payment_id
+    }
+    return payment
