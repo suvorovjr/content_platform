@@ -20,4 +20,4 @@ class SubscribeToAuthor(View):
             else:
                 subscription.is_active = True
             subscription.save()
-        return redirect(reverse_lazy('users:index'))
+        return redirect(request.META['HTTP_REFERER'])
