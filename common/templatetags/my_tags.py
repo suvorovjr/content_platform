@@ -28,3 +28,8 @@ def my_avatar(imagine):
 @register.simple_tag()
 def is_subscribed(user, author):
     return Subscription.objects.filter(user=user, author=author, is_active=True).exists
+
+
+@register.filter
+def is_instance(obj, type_name):
+    return obj.__class__.__name__.lower() == type_name.lower()

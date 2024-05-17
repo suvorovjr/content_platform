@@ -1,5 +1,6 @@
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import UserPassesTestMixin
+from itertools import chain
 from common.mixins import SlugifyMixin, TitleMixin
 from django.views import generic
 from .forms import PostForm, VideoForm
@@ -61,9 +62,9 @@ class FeedListView(generic.ListView):
         authors_ids = Subscription.objects.filter(user=user, is_active=True).values_list('author_id', flat=True)
         videos = Video.objects.filter(author_id__in=authors_ids)
         posts = Post.objects.filter(author_id__in=authors_ids)
-        combined_queryset = videos | posts
-        combined_queryset = combined_queryset.order_by('-published_date')
-        return combined_queryset
+        combined_results = list(chain(videos, posts))
+        combined_results.sort(key=lambda x: x.created_at, reverse=True)
+        return combined_results
 
 
 class PostDetailView(TitleMixin, generic.DetailView):

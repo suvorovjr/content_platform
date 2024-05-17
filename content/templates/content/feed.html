@@ -1,10 +1,37 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% load my_tags %}
+{% block content %}
+<main class="container mt-3">
+    {% if not object_list %}
+    <h1 class="h1 text-center w-50 mx-auto mt-1 py-5 mb-4"><strong>У вас нет активных подписок или авторы, на которых вы
+        подписаны, не выложили контент</strong></h1>
+    {% else %}
+    <h1 class="h1 text-center w-50 mx-auto mt-1 py-5 mb-4"><strong>Лента:</strong></h1>
+    {% for obj in object_list %}
+    <div class="pc-container" style="background-image: url('/media/{{ obj.imagine }}');">
+        <div class="pc-cover">
+            <div class="pc-header">
+                {% if obj|is_instance:'post' %}
+                <h2 class="pc-title"><a href="{% url 'content:post-detail' obj.slug %}" class="pc-link">
+                    {{ obj.title }}</a></h2>
+                {% else %}
+                <h2 class="pc-title"><a href="{% url 'content:video-detail' obj.slug %}" class="pc-link">
+                    {{ obj.title }}</a></h2>
+                {% endif %}
+                <p class="pc-description">{{ obj.body|truncatechars:150 }}</p>
+            </div>
+            <div class="pc-footer">
+                <span class="pc-date">{{ obj.created_at|date }} в {{ obj.created_at|time }}</span>
+                {% if obj|is_instance:'post' %}
+                <a href="{% url 'content:post-detail' obj.slug %}" class="pc-more-btn">Подробнее</a>
+                {% else %}
+                <a href="{% url 'content:video-detail' obj.slug %}" class="pc-more-btn">Подробнее</a>
+                {% endif %}
 
-</body>
-</html>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+</main>
+{% endblock %}
