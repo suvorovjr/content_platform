@@ -25,7 +25,7 @@ class BaseDetailView(TitleMixin, generic.DetailView):
         return super().dispatch(request, *args, **kwargs)
 
 
-class BaseCreateView(LoginRequiredMixin, SlugifyMixin, TitleMixin, generic.CreateView):
+class BaseCreateView(AuthorRequiredMixin, SlugifyMixin, TitleMixin, generic.CreateView):
     success_url = reverse_lazy('users:author_profile')
 
     def form_valid(self, form):
