@@ -1,5 +1,5 @@
 from django.contrib.auth import login
-from common.mixins import SlugifyMixin, TitleMixin
+from common.mixins import SlugifyMixin, TitleMixin, LoginRequiredMixin, AuthorRequiredMixin, NotLoginRequiredMixin
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.views.generic import TemplateView, CreateView, FormView, ListView, DetailView, UpdateView
@@ -15,7 +15,7 @@ class IndexView(TitleMixin, TemplateView):
     title = 'Главная'
 
 
-class UserCreateView(TitleMixin, CreateView):
+class UserCreateView(TitleMixin, NotLoginRequiredMixin, CreateView):
     template_name = 'users/phone_signin.html'
     model = User
     form_class = UserForm
@@ -38,13 +38,13 @@ class UserCreateView(TitleMixin, CreateView):
             return self.form_invalid(form)
 
 
-class LoginView(TitleMixin, BaseLoginView):
+class LoginView(TitleMixin, NotLoginRequiredMixin, BaseLoginView):
     template_name = 'users/password_signin.html'
     form_class = LoginForm
     title = 'Вход'
 
 
-class ConfirmCodeView(TitleMixin, FormView):
+class ConfirmCodeView(TitleMixin, NotLoginRequiredMixin, FormView):
     form_class = ConfirmCodeForm
     template_name = 'users/confirm_code.html'
     success_url = reverse_lazy('users:list')
@@ -79,7 +79,7 @@ class ConfirmCodeView(TitleMixin, FormView):
         return self.render_to_response(context_data)
 
 
-class ProfileView(TitleMixin, DetailView):
+class ProfileView(TitleMixin, LoginRequiredMixin, DetailView):
     model = User
     template_name = 'users/profile.html'
     title = 'Профиль'
@@ -88,7 +88,7 @@ class ProfileView(TitleMixin, DetailView):
         return self.request.user
 
 
-class ProfileUpdateView(TitleMixin, UpdateView):
+class ProfileUpdateView(TitleMixin, LoginRequiredMixin, UpdateView):
     model = User
     form_class = ProfileUpdateForm
     template_name = 'users/update_profile.html'
@@ -99,7 +99,7 @@ class ProfileUpdateView(TitleMixin, UpdateView):
         return self.request.user
 
 
-class AuthorCreateView(TitleMixin, SlugifyMixin, CreateView):
+class AuthorCreateView(TitleMixin, LoginRequiredMixin, SlugifyMixin, CreateView):
     form_class = CreateAuthorForm
     model = Author
     template_name = 'users/author_form.html'
@@ -149,7 +149,7 @@ class AuthorDetailView(DetailView):
         return context_data
 
 
-class UserSetPasswordView(TitleMixin, FormView):
+class UserSetPasswordView(TitleMixin, LoginRequiredMixin, FormView):
     form_class = UserSetPasswordForm
     template_name = 'users/set_password.html'
     success_url = reverse_lazy('users:index')
@@ -165,7 +165,7 @@ class UserSetPasswordView(TitleMixin, FormView):
         return super().form_valid(form)
 
 
-class AuthorProfileView(TitleMixin, DetailView):
+class AuthorProfileView(TitleMixin, AuthorRequiredMixin, DetailView):
     model = Author
     template_name = 'users/author_profile.html'
     title = 'Профиль автора'
@@ -174,7 +174,7 @@ class AuthorProfileView(TitleMixin, DetailView):
         return Author.objects.filter(user=self.request.user).first()
 
 
-class AuthorProfileUpdateView(TitleMixin, UpdateView):
+class AuthorProfileUpdateView(TitleMixin, AuthorProfileView, UpdateView):
     model = User
     form_class = CreateAuthorForm
     template_name = 'users/update_author_profile.html'

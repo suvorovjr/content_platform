@@ -1,16 +1,15 @@
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy, reverse
-from django.contrib.auth.mixins import LoginRequiredMixin
 from datetime import datetime
 from itertools import chain
-from common.mixins import SlugifyMixin, TitleMixin
+from common.mixins import SlugifyMixin, TitleMixin, LoginRequiredMixin
 from django.views import generic
 from .forms import PostForm, VideoForm
 from payment.models import Payment, Subscription
 from .models import Post, Video
 
 
-class BaseDetailView(generic.DetailView):
+class BaseDetailView(TitleMixin, generic.DetailView):
 
     def dispatch(self, request, *args, **kwargs):
         publication = self.get_object()
@@ -24,7 +23,7 @@ class BaseDetailView(generic.DetailView):
         return super().dispatch(request, *args, **kwargs)
 
 
-class BaseCreateView(SlugifyMixin, TitleMixin, generic.CreateView):
+class BaseCreateView(LoginRequiredMixin, SlugifyMixin, TitleMixin, generic.CreateView):
     success_url = reverse_lazy('users:profile')
 
     def form_valid(self, form):
@@ -64,7 +63,7 @@ class VideoUpdateView(TitleMixin, generic.UpdateView):
     title = 'Измененние видео'
 
 
-class FeedListView(TitleMixin, generic.ListView):
+class FeedListView(LoginRequiredMixin, TitleMixin, generic.ListView):
     template_name = 'content/feed.html'
     title = 'Лента'
 
@@ -78,12 +77,12 @@ class FeedListView(TitleMixin, generic.ListView):
         return combined_results
 
 
-class PostDetailView(TitleMixin, BaseDetailView):
+class PostDetailView(BaseDetailView):
     model = Post
     title = 'Просмотр статьи'
 
 
-class VideoDetailView(TitleMixin, BaseDetailView):
+class VideoDetailView(BaseDetailView):
     model = Video
     title = 'Просмотр видео'
 

@@ -1,4 +1,26 @@
+from django.contrib.auth.mixins import AccessMixin, LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
 from pytils.translit import slugify
+
+
+class AuthorRequiredMixin(AccessMixin):
+    """Миксин, который запрещает доступ пользователю, если он не является автором."""
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return self.handle_no_permission()
+        if not request.user.is_author:
+            raise PermissionDenied()
+        return super().dispatch(request, *args, **kwargs)
+
+
+class NotLoginRequiredMixin(AccessMixin):
+    """Миксин, который запрещает доступ пользователю, если он авторизован."""
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return self.handle_no_permission()
+        return super().dispatch(request, *args, **kwargs)
 
 
 class SlugifyMixin:

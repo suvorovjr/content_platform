@@ -1,5 +1,5 @@
 import stripe
-from common.mixins import TitleMixin
+from common.mixins import TitleMixin, LoginRequiredMixin
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from django.shortcuts import redirect
@@ -14,7 +14,7 @@ from django.views.decorators.http import require_POST
 from users.models import Author
 
 
-class SubscribeToAuthor(View):
+class SubscribeToAuthor(LoginRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
         author_id = self.request.POST.get('author_id', None)
@@ -34,7 +34,7 @@ class SubscribeToAuthor(View):
         return redirect(request.META['HTTP_REFERER'])
 
 
-class UserSubscriptionList(TitleMixin, generic.ListView):
+class UserSubscriptionList(TitleMixin, LoginRequiredMixin, generic.ListView):
     model = Subscription
     title = 'Мои подписки'
     template_name = 'payment/subscription_list.html'
@@ -45,7 +45,7 @@ class UserSubscriptionList(TitleMixin, generic.ListView):
         return queryset
 
 
-class PaymentCreateView(View):
+class PaymentCreateView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         author_id = self.request.POST.get('author_id', None)
         user = self.request.user
@@ -64,7 +64,7 @@ class PaymentCreateView(View):
         return redirect(payment.stripe_url)
 
 
-class PayOfferView(generic.TemplateView):
+class PayOfferView(LoginRequiredMixin, generic.TemplateView):
     template_name = 'payment/pay_offer.html'
 
     def get_context_data(self, **kwargs):
