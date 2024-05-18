@@ -1,4 +1,4 @@
-from django.contrib.auth.mixins import AccessMixin, LoginRequiredMixin
+from django.contrib.auth.mixins import AccessMixin, LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import PermissionDenied
 from pytils.translit import slugify
 
@@ -21,6 +21,12 @@ class NotLoginRequiredMixin(AccessMixin):
         if request.user.is_authenticated:
             return self.handle_no_permission()
         return super().dispatch(request, *args, **kwargs)
+
+
+class IsAuthorMixin(UserPassesTestMixin):
+    def test_func(self):
+        publication = self.get_object()
+        return self.request.user == publication.author
 
 
 class SlugifyMixin:

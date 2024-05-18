@@ -47,7 +47,9 @@
                     <img src="{{ avatar_url|my_avatar }}" alt="mdo" width="32" height="32" class="rounded-circle">
                 </a>
                 <ul class="dropdown-menu text-small">
+                    {% if request.user.is_author %}
                     <li><a class="dropdown-item" href="{% url 'users:author_profile' %}">Профиль автора</a></li>
+                    {% endif %}
                     <li><a class="dropdown-item" href="{% url 'users:profile' %}">Профиль</a></li>
                     <li>
                         <hr class="dropdown-divider">
@@ -85,13 +87,13 @@
         </a>
 
         <ul class="nav col-md-4 justify-content-end">
-            <li class="nav-item"><a href=""
+            <li class="nav-item"><a href="{% url 'users:index' %}"
                                     class="nav-link px-2 text-body-secondary">Главная</a></li>
             <li class="nav-item"><a href="{% url 'users:list' %}" class="nav-link px-2 text-body-secondary">Блогеры</a>
             </li>
             {% if user.is_authenticated %}
-            <li class="nav-item"><a href="" class="nav-link px-2 text-body-secondary">Лента</a></li>
-            <li class="nav-item"><a href="" class="nav-link px-2 text-body-secondary">Мои подписки</a></li>
+            <li class="nav-item"><a href="{% url 'content:feed' %}" class="nav-link px-2 text-body-secondary">Лента</a></li>
+            <li class="nav-item"><a href="{% url 'payment:subscribers_list' %}" class="nav-link px-2 text-body-secondary">Мои подписки</a></li>
             {% endif %}
         </ul>
     </footer>

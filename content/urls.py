@@ -13,5 +13,6 @@ urlpatterns = [
     path('post/detail/<slug:slug>/', PostDetailView.as_view(), name='post-detail'),
     path('video/detail/<slug:slug>/', VideoDetailView.as_view(), name='video-detail'),
     path('post/delete/<slug:slug>', PostDeleteView.as_view(), name='post-delete'),
+    path('video/delete/<slug:slug>', VideoDeleteView.as_view(), name='video-delete'),
     path('feed/', FeedListView.as_view(), name='feed'),
 ]

@@ -8,6 +8,10 @@
 <section class="call-to-action">
     <h2>Готовы поделиться своими историями?</h2>
     <p>Присоединяйтесь к нашему сообществу творческих людей уже сегодня.</p>
+    {% if request.user.is_authenticated %}
+    <a href="{% url 'users:flag-autor' %}" class="btn btn-outline-dark mr-3 mx-2">Начать публиковаться</a>
+    {% else %}
     <a href="{% url 'users:login' %}" class="btn btn-outline-dark mr-3 mx-2">Начать публиковаться</a>
+    {% endif %}
 </section>
 {% endblock %}

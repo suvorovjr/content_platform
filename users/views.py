@@ -174,7 +174,7 @@ class AuthorProfileView(TitleMixin, AuthorRequiredMixin, DetailView):
         return Author.objects.filter(user=self.request.user).first()
 
 
-class AuthorProfileUpdateView(TitleMixin, AuthorProfileView, UpdateView):
+class AuthorProfileUpdateView(TitleMixin, AuthorRequiredMixin, UpdateView):
     model = User
     form_class = CreateAuthorForm
     template_name = 'users/update_author_profile.html'

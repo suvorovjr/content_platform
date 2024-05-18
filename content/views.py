@@ -2,7 +2,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy, reverse
 from datetime import datetime
 from itertools import chain
-from common.mixins import SlugifyMixin, TitleMixin, LoginRequiredMixin
+from common.mixins import SlugifyMixin, TitleMixin, LoginRequiredMixin, IsAuthorMixin, AuthorRequiredMixin
 from django.views import generic
 from .forms import PostForm, VideoForm
 from payment.models import Payment, Subscription
@@ -10,6 +10,7 @@ from .models import Post, Video
 
 
 class BaseDetailView(TitleMixin, generic.DetailView):
+    success_url = reverse_lazy('users:profile')
 
     def dispatch(self, request, *args, **kwargs):
         publication = self.get_object()
@@ -35,12 +36,27 @@ class BaseCreateView(LoginRequiredMixin, SlugifyMixin, TitleMixin, generic.Creat
         return super().form_valid(form)
 
 
+class BaseUpdateView(AuthorRequiredMixin, SlugifyMixin, TitleMixin, generic.UpdateView):
+    success_url = reverse_lazy('users:profile')
+
+    def form_valid(self, form):
+        if form.is_valid():
+            new_publication = form.save()
+            if new_publication.title:
+                new_publication.slug = self.get_unique_slug(new_publication.title)
+            new_publication.author.save()
+        return super().form_valid(form)
+
+
+class BaseDeleteView(IsAuthorMixin, TitleMixin, AuthorRequiredMixin, generic.DeleteView):
+    success_url = reverse_lazy('users:profile')
+
+
 class PostCreateView(BaseCreateView):
     model = Post
     form_class = PostForm
     template_name = 'content/post_form.html'
     title = 'Создание поста'
-    success_url = reverse_lazy('users:profile')
 
 
 class VideoCreateView(BaseCreateView):
@@ -48,18 +64,19 @@ class VideoCreateView(BaseCreateView):
     form_class = VideoForm
     template_name = 'content/video_form.html'
     title = 'Создание видео'
-    success_url = reverse_lazy('users:profile')
 
 
-class PostUpdateView(TitleMixin, generic.UpdateView):
+class PostUpdateView(IsAuthorMixin, BaseUpdateView):
+    model = Post
     form_class = PostForm
-    success_url = reverse_lazy('users:profile')
+    template_name = 'content/post_form.html'
     title = 'Измененние поста'
 
 
-class VideoUpdateView(TitleMixin, generic.UpdateView):
+class VideoUpdateView(IsAuthorMixin, BaseUpdateView):
+    model = Video
     form_class = VideoForm
-    success_url = reverse_lazy('users:profile')
+    template_name = 'content/video_form.html'
     title = 'Измененние видео'
 
 
@@ -87,9 +104,9 @@ class VideoDetailView(BaseDetailView):
     title = 'Просмотр видео'
 
 
-class PostDeleteView(generic.DeleteView):
-    pass
+class PostDeleteView(BaseDeleteView):
+    model = Post
 
 
-class VideoDeleteView(generic.DeleteView):
-    pass
+class VideoDeleteView(BaseDeleteView):
+    model = Video
