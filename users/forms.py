@@ -56,8 +56,9 @@ class CreateAuthorForm(StylesMixin, forms.ModelForm):
 
     def clean_blog_name(self):
         blog_name = str(self.cleaned_data['blog_name'])
-        if Author.objects.filter(blog_name=blog_name).exists():
-            raise forms.ValidationError('Это название блога занято')
+        if not self.instance.blog_name == blog_name:
+            if Author.objects.filter(blog_name=blog_name).exists():
+                raise forms.ValidationError('Это название блога занято')
         if len(blog_name) < 3:
             raise forms.ValidationError('Название блога не может быть меньше 3 символов')
         return blog_name

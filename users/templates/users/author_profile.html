@@ -2,13 +2,47 @@
 {% load my_tags %}
 {% load users_tags %}
 {% block content %}
-<div class="row">
-    <div style="text-align:center; margin-top:20px" class="col-lg-6 mx-auto">
-        <img style="width:300px; height:300px; margin:auto;" class="bd-placeholder-img rounded-circle border"
-             src="{{ object.user.avatar|my_avatar }}">
-        <h2 class="fw-normal">{{ object.blog_name }}</h2>
-        <a style="margin-top: 10px;" class="btn btn-secondary mx-2" href="{% url 'users:profile_author_update' %}">Редактировать
-            профиль автора</a>
+<main class="container mt-3">
+    <div class="row">
+        <div style="text-align:center; margin-top:20px" class="col-lg-6 mx-auto">
+            <img style="width:300px; height:300px; margin:auto;" class="bd-placeholder-img rounded-circle border"
+                 src="{{ object.user.avatar|my_avatar }}">
+            <h2 class="fw-normal">{{ object.blog_name }}</h2>
+            <a style="margin-top: 10px;" class="btn btn-secondary mx-2" href="{% url 'users:profile_author_update' %}">Редактировать
+                профиль автора</a>
+        </div>
     </div>
-</div>
+    {% if not object_list %}
+    <h1 class="h1 text-center w-50 mx-auto mt-1 py-5 mb-4"><strong>У вас пока нет публикаций</strong></h1>
+    {% else %}
+    <h1 class="h1 text-center w-50 mx-auto mt-1 py-5 mb-4"><strong>Ваши публикации:</strong></h1>
+    {% for obj in object_list %}
+    <div class="pc-container" style="background-image: url('/media/{{ obj.imagine }}');">
+        <div class="pc-cover">
+            <div class="pc-header">
+                {% if obj.type == 'post' %}
+                <h2 class="pc-title"><a href="{% url 'content:post-detail' obj.slug %}" class="pc-link">
+                    {{ obj.title }}</a></h2>
+                {% else %}
+                <h2 class="pc-title"><a href="{% url 'content:video-detail' obj.slug %}" class="pc-link">
+                    {{ obj.title }}</a></h2>
+                {% endif %}
+                <p class="pc-description">{{ obj.body|truncatechars:150 }}</p>
+            </div>
+            <div class="pc-footer">
+                <span class="pc-date">{{ obj.created_at|date }} в {{ obj.created_at|time }}</span>
+                {% if obj.type == 'post' %}
+                <a href="{% url 'content:post-delete' obj.slug %}" class="button unsubscribe">Удалить</a>
+                <a href="{% url 'content:post-update' obj.slug %}" class="pc-more-btn">Редактировать</a>
+                {% else %}
+                <a href="{% url 'content:video-delete' obj.slug %}" class="button unsubscribe">Удалить</a>
+                <a href="{% url 'content:video-update' obj.slug %}" class="pc-more-btn">Редактировать</a>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+</main>
 {% endblock %}

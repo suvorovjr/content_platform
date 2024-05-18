@@ -9,7 +9,11 @@
     <h2>Готовы поделиться своими историями?</h2>
     <p>Присоединяйтесь к нашему сообществу творческих людей уже сегодня.</p>
     {% if request.user.is_authenticated %}
+    {% if request.user.is_author %}
+    <a href="{% url 'users:author_profile' %}" class="btn btn-outline-dark mr-3 mx-2">Начать публиковаться</a>
+    {% else %}
     <a href="{% url 'users:flag-autor' %}" class="btn btn-outline-dark mr-3 mx-2">Начать публиковаться</a>
+    {% endif %}
     {% else %}
     <a href="{% url 'users:login' %}" class="btn btn-outline-dark mr-3 mx-2">Начать публиковаться</a>
     {% endif %}

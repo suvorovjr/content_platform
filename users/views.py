@@ -10,6 +10,20 @@ from content.models import Post, Video
 from .models import User, Author
 
 
+class GetContextDataMixin(DetailView):
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        author = self.get_object()
+        posts = Post.objects.filter(author=author).values()
+        videos = Video.objects.filter(author=author).values()
+        for post_dict in posts:
+            post_dict['type'] = 'post'
+        combined_data = sorted(list(posts) + list(videos), key=lambda x: x['created_at'], reverse=True)
+        context_data['object_list'] = combined_data
+        context_data['title'] = f'Профиль {author.blog_name}'
+        return context_data
+
+
 class IndexView(TitleMixin, TemplateView):
     template_name = 'users/index.html'
     title = 'Главная'
@@ -103,7 +117,7 @@ class AuthorCreateView(TitleMixin, LoginRequiredMixin, SlugifyMixin, CreateView)
     form_class = CreateAuthorForm
     model = Author
     template_name = 'users/author_form.html'
-    success_url = reverse_lazy('users:index')
+    success_url = reverse_lazy('users:list')
     title = 'Стать автором'
 
     def form_valid(self, form):
@@ -132,27 +146,15 @@ class AuthorListView(TitleMixin, ListView):
         return queryset
 
 
-class AuthorDetailView(DetailView):
+class AuthorDetailView(GetContextDataMixin):
     model = Author
     template_name = 'users/author_detail.html'
-
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        author = self.get_object()
-        posts = Post.objects.filter(author=author).values()
-        videos = Video.objects.filter(author=author).values()
-        for post_dict in posts:
-            post_dict['type'] = 'post'
-        combined_data = sorted(list(posts) + list(videos), key=lambda x: x['created_at'], reverse=True)
-        context_data['object_list'] = combined_data
-        context_data['title'] = f'Профиль {author.blog_name}'
-        return context_data
 
 
 class UserSetPasswordView(TitleMixin, LoginRequiredMixin, FormView):
     form_class = UserSetPasswordForm
     template_name = 'users/set_password.html'
-    success_url = reverse_lazy('users:index')
+    success_url = reverse_lazy('users:profile')
     title = 'Установление пароля'
 
     def get_form_kwargs(self):
@@ -165,7 +167,7 @@ class UserSetPasswordView(TitleMixin, LoginRequiredMixin, FormView):
         return super().form_valid(form)
 
 
-class AuthorProfileView(TitleMixin, AuthorRequiredMixin, DetailView):
+class AuthorProfileView(TitleMixin, AuthorRequiredMixin, GetContextDataMixin):
     model = Author
     template_name = 'users/author_profile.html'
     title = 'Профиль автора'

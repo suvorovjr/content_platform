@@ -26,7 +26,7 @@ class NotLoginRequiredMixin(AccessMixin):
 class IsAuthorMixin(UserPassesTestMixin):
     def test_func(self):
         publication = self.get_object()
-        return self.request.user == publication.author
+        return self.request.user.author == publication.author
 
 
 class SlugifyMixin:

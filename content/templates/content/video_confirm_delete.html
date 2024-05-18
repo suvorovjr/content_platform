@@ -10,8 +10,8 @@
                     <h4 class="h4 mb-3 fw-normal">Вы дейтсвительно хотите удалить видео "{{ object.title }}"
                         ?
                         Если да, тогда нажмите кнопку "Удалить". В противном случае кнопку "Отмена".</h4>
-                    <button type="submit" class="btn btn-danger">Удалить</button>
-                    <button class="btn btn-dark mt-5" onclick="window.history.back();">Отмена</button>
+                    <button type="submit" class="btn btn-danger mt-5">Удалить</button>
+                    <a class="btn btn-dark mt-5" href="{% url 'users:author_profile' %}">Отмена</a>
                 </form>
             </div>
         </div>

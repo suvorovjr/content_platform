@@ -25,7 +25,7 @@ class BaseDetailView(TitleMixin, generic.DetailView):
 
 
 class BaseCreateView(LoginRequiredMixin, SlugifyMixin, TitleMixin, generic.CreateView):
-    success_url = reverse_lazy('users:profile')
+    success_url = reverse_lazy('users:author_profile')
 
     def form_valid(self, form):
         if form.is_valid():
@@ -37,7 +37,7 @@ class BaseCreateView(LoginRequiredMixin, SlugifyMixin, TitleMixin, generic.Creat
 
 
 class BaseUpdateView(AuthorRequiredMixin, SlugifyMixin, TitleMixin, generic.UpdateView):
-    success_url = reverse_lazy('users:profile')
+    success_url = reverse_lazy('users:author_profile')
 
     def form_valid(self, form):
         if form.is_valid():
@@ -49,7 +49,7 @@ class BaseUpdateView(AuthorRequiredMixin, SlugifyMixin, TitleMixin, generic.Upda
 
 
 class BaseDeleteView(IsAuthorMixin, TitleMixin, AuthorRequiredMixin, generic.DeleteView):
-    success_url = reverse_lazy('users:profile')
+    success_url = reverse_lazy('users:author_profile')
 
 
 class PostCreateView(BaseCreateView):
