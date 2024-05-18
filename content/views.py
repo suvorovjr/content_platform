@@ -1,8 +1,9 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy, reverse
 from datetime import datetime
 from itertools import chain
-from common.mixins import SlugifyMixin, TitleMixin, LoginRequiredMixin, IsAuthorMixin, AuthorRequiredMixin
+from common.mixins import SlugifyMixin, TitleMixin, IsAuthorMixin, AuthorRequiredMixin
 from django.views import generic
 from .forms import PostForm, VideoForm
 from payment.models import Payment, Subscription

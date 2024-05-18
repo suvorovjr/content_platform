@@ -1,5 +1,6 @@
 import stripe
-from common.mixins import TitleMixin, LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
+from common.mixins import TitleMixin
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from django.shortcuts import redirect

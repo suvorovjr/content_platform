@@ -1,4 +1,4 @@
-from django.contrib.auth.mixins import AccessMixin, LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import AccessMixin, UserPassesTestMixin
 from django.core.exceptions import PermissionDenied
 from pytils.translit import slugify
 

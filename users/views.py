@@ -1,5 +1,6 @@
 from django.contrib.auth import login
-from common.mixins import SlugifyMixin, TitleMixin, LoginRequiredMixin, AuthorRequiredMixin, NotLoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
+from common.mixins import SlugifyMixin, TitleMixin, AuthorRequiredMixin, NotLoginRequiredMixin
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.views.generic import TemplateView, CreateView, FormView, ListView, DetailView, UpdateView
