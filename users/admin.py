@@ -8,5 +8,5 @@ class UserAdmin(admin.ModelAdmin):
 
 
 @admin.register(Author)
-class UserAdmin(admin.ModelAdmin):
+class AuthorAdmin(admin.ModelAdmin):
     list_display = ('user', 'blog_name', 'subscription_price')
