@@ -140,7 +140,7 @@ class AuthorListView(TitleMixin, ListView):
 
     def get_queryset(self):
         user = self.request.user
-        if user.is_author:
+        if user.is_author if user.is_authenticated else False:
             queryset = Author.objects.exclude(id=user.author.id)
         else:
             queryset = Author.objects.all()
