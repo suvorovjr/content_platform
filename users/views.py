@@ -77,21 +77,21 @@ class ConfirmCodeView(TitleMixin, NotLoginRequiredMixin, FormView):
         else:
             return self.form_invalid(form)
 
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs.update({'request': self.request})
-        return kwargs
+    # def get_form_kwargs(self):
+    #     kwargs = super().get_form_kwargs()
+    #     kwargs.update({'request': self.request})
+    #     return kwargs
 
-    def get(self, request, *args, **kwargs):
-        context_data = self.get_context_data()
-        if 'resend' in request.GET:
-            phone_number = request.session['phone_number']
-            print(phone_number)
-            confirm_code = get_confirm_code()
-            print(confirm_code)
-            self.request.session['confirm_code'] = confirm_code
-            send_sms_code(phone_number, confirm_code)
-        return self.render_to_response(context_data)
+    # def get(self, request, *args, **kwargs):
+    #     context_data = self.get_context_data()
+    #     if 'resend' in request.GET:
+    #         phone_number = request.session['phone_number']
+    #         print(phone_number)
+    #         confirm_code = get_confirm_code()
+    #         print(confirm_code)
+    #         self.request.session['confirm_code'] = confirm_code
+    #         send_sms_code(phone_number, confirm_code)
+    #     return self.render_to_response(context_data)
 
 
 class ProfileView(TitleMixin, LoginRequiredMixin, DetailView):
