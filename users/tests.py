@@ -2,7 +2,7 @@ from django.contrib.auth.models import AnonymousUser
 from django.core.exceptions import PermissionDenied
 from django.test import TestCase, RequestFactory
 from .models import User, Author
-from .views import UserCreateView, LoginView, ProfileView, AuthorProfileView, AuthorProfileUpdateView
+from .views import UserCreateView, LoginView, ProfileView, AuthorProfileView, AuthorProfileUpdateView, ProfileUpdateView
 
 
 class UserCreateViewTests(TestCase):
@@ -58,6 +58,24 @@ class ProfileViewTest(TestCase):
         request = self.factory.get('/profile')
         request.user = AnonymousUser()
         response = ProfileView.as_view()(request)
+        self.assertEqual(response.status_code, 302)
+
+
+class ProfileUpdateViewTest(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.user = User.objects.create(phone_number='987654310')
+
+    def test_view_with_authenticated_user(self):
+        request = self.factory.get('/profile/update')
+        request.user = self.user
+        response = ProfileUpdateView.as_view()(request)
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_with_non_authenticated_user(self):
+        request = self.factory.get('/profile/update')
+        request.user = AnonymousUser()
+        response = ProfileUpdateView.as_view()(request)
         self.assertEqual(response.status_code, 302)
 
 

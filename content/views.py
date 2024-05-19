@@ -19,6 +19,7 @@ class BaseDetailView(TitleMixin, generic.DetailView):
             is_paid = Payment.objects.filter(user=request.user, author=publication.author,
                                              end_date__gt=datetime.now()).exists()
             is_author = publication.author == request.user.author if request.user.is_author else False
+            print(is_paid, is_author)
             if not is_paid and not is_author:
                 redirect_url = f"{reverse('payment:pay_offer')}?author_id={publication.author.id}"
                 return HttpResponseRedirect(redirect_url)
